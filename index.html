@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Pizzaria Brasiliana - A Copa vai começar! ⚽🔜</title>
+    <style>
+        :root {
+            --vermelho: #d32f2f;
+            --verde: #2e7d32;
+            --whats: #25d366;
+            --cinza: #f4f4f4;
+            --marrom: #5d4037;
+            --azul-maps: #1a73e8;
+            --ouro: linear-gradient(135deg, #ffd700, #ffa500);
+            --verde-copa: #009c3b;
+            --amarelo-copa: #ffdf00;
+            --azul-copa: #002776;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--cinza); margin: 0; padding-bottom: 120px; overflow-x: hidden; }
+
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: linear-gradient(145deg, #009c3b 0%, #fedf00 100%);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 99999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .splash-content { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .splash-logo { 
+            height: 140px; 
+            max-width: 85%;
+            border-radius: 24px; 
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+            animation: pulse-logo 2s infinite ease-in-out;
+        }
+        .splash-loader { 
+            width: 48px; height: 48px; 
+            border: 5px solid rgba(255,255,255,0.5); 
+            border-radius: 50%; 
+            border-top-color: #ffffff; 
+            background-color: rgba(0,0,0,0.1);
+            animation: spin-loader 1s infinite linear; 
+        }
+        @keyframes pulse-logo { 
+            0% { transform: scale(1); opacity: 0.95; } 
+            50% { transform: scale(1.08); opacity: 1; } 
+            100% { transform: scale(1); opacity: 0.95; } 
+        }
+        @keyframes spin-loader { to { transform: rotate(360deg); } }
+        .splash-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .letreiro-copa {
+            background: linear-gradient(135deg, var(--verde-copa) 0%, #007a2e 100%);
+            color: var(--amarelo-copa); font-weight: bold; font-size: 14px;
+            padding: 8px 0; white-space: nowrap; overflow: hidden;
+            position: sticky; top: 0; z-index: 1001;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); border-bottom: 2px solid var(--amarelo-copa);
+        }
+        .letreiro-copa .marquee {
+            display: inline-block; animation: marquee 25s linear infinite; padding-left: 100%;
+        }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .letreiro-copa span { margin: 0 20px; }
+        .contagem-regressiva { background: var(--amarelo-copa); color: var(--azul-copa); padding: 3px 10px; border-radius: 20px; font-size: 16px; }
+
+        header {
+            background: white; padding: 10px 15px; border-bottom: 2px solid var(--vermelho);
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 36px; z-index: 1000;
+        }
+        .logo { height: 65px; border-radius: 8px; }
+        .cart-icon { background: var(--vermelho); color: white; padding: 10px 18px; border-radius: 25px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; border: 2px solid transparent; }
+        .cart-active { animation: neon-pulse 1.5s infinite alternate; border-color: #fff; }
+        @keyframes neon-pulse { from { box-shadow: 0 0 5px #fff, 0 0 10px var(--vermelho); transform: scale(1); } to { box-shadow: 0 0 15px #fff, 0 0 25px var(--vermelho); transform: scale(1.05); } }
+
+        nav {
+            background: var(--vermelho); display: flex; overflow-x: auto; padding: 12px;
+            gap: 20px; position: sticky; top: 115px; z-index: 999;
+            scroll-behavior: smooth;
+        }
+        nav a { 
+            color: white; text-decoration: none; font-weight: bold; text-transform: uppercase; 
+            font-size: 13px; white-space: nowrap; padding: 6px 12px; border-radius: 20px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        nav a.nav-active {
+            background: var(--amarelo-copa);
+            color: var(--azul-copa);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-weight: 900;
+        }
+        nav::-webkit-scrollbar { display: none; }
+
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+        section { scroll-margin-top: 170px; }
+        .titulo-secao { font-size: 20px; margin: 25px 0 15px; color: var(--vermelho); border-bottom: 3px solid var(--vermelho); padding-bottom: 5px; font-weight: bold; }
+
+        .search-container {
+            margin: 15px 0 20px;
+            position: relative;
+        }
+        .search-container input {
+            width: 100%;
+            padding: 14px 20px 14px 50px;
+            border-radius: 30px;
+            border: 2px solid #ddd;
+            font-size: 16px;
+            background: white;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            outline: none;
+            font-family: inherit;
+        }
+        .search-container input:focus {
+            border-color: var(--vermelho);
+            box-shadow: 0 0 0 3px rgba(211,47,47,0.15);
+        }
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #999;
+            pointer-events: none;
+        }
+        .search-clear {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #ccc;
+            cursor: pointer;
+            display: none;
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .search-clear:hover { background: #f0f0f0; }
+        .search-clear.visible { display: block; }
+
+        .search-results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .search-results-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .search-results-box {
+            background: white;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .search-results-modal.active .search-results-box {
+            transform: scale(1);
+        }
+        .search-results-header {
+            display: flex;
+            flex-direction: column;
+            padding: 16px 20px;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
+        }
+        .search-results-header .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .search-results-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+        .search-results-header .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            padding: 0 8px;
+        }
+        .search-results-header .close-btn:hover {
+            color: var(--vermelho);
+        }
+        .search-term-display {
+            font-size: 14px;
+            color: #555;
+            margin-top: 4px;
+            background: #f5f5f5;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            align-self: flex-start;
+        }
+        .search-term-display strong {
+            color: var(--vermelho);
+            font-weight: 600;
+        }
+        .search-results-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+        }
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        .search-result-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .search-result-info {
+            flex: 1;
+        }
+        .search-result-info .nome {
+            font-weight: 600;
+            font-size: 15px;
+            color: #333;
+        }
+        .search-result-info .desc {
+            font-size: 12px;
+            color: #777;
+            margin-top: 2px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .search-result-info .preco {
+            font-weight: bold;
+            color: var(--verde);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .search-result-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .search-result-actions button {
+            background: var(--verde);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+        }
+        .search-result-actions button:active {
+            transform: scale(0.95);
+            background: #1b5e20;
+        }
+        .search-no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 16px;
+        }
+        .search-no-results strong {
+            color: var(--vermelho);
+        }
+
+        .btn-meio-meio {
+            background: linear-gradient(135deg, #ff9800, #d32f2f); color: white;
+            padding: 15px; border-radius: 12px; text-align: center; font-weight: bold;
+            font-size: 15px; margin-bottom: 20px; cursor: pointer;
+            transition: transform 0.2s; text-transform: uppercase;
+        }
+        .btn-meio-meio:active { transform: scale(0.98); }
+
+        .dicas-meio-meio {
+            background: #fffaf0;
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin: 0 0 20px 0;
+            border-left: 5px solid var(--vermelho);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .combinacoes-titulo {
+            font-weight: bold;
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #e65100;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .grid-combinacoes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .combinacao-item {
+            background: white;
+            border-radius: 40px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #ffe0b3;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        .combinacao-item:active {
+            transform: scale(0.97);
+            background: #fff1e0;
+            border-color: var(--vermelho);
+        }
+        .combinacao-emoji {
+            font-size: 20px;
+            background: #f5f0e6;
+            border-radius: 30px;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .combinacao-nome {
+            flex: 1;
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+        }
+        @media (max-width: 480px) {
+            .grid-combinacoes {
+                grid-template-columns: 1fr;
+            }
+            .combinacao-nome {
+                white-space: normal;
+            }
+        }
+
+        .secao-promocao {
+            background: linear-gradient(135deg, #fff9c4, #fff176);
+            border-radius: 16px; padding: 10px 12px; margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #ffb300;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .img-promocao-pequena { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.15); flex-shrink: 0; }
+        .promocao-info { flex: 1; }
+        .badge-promocao-pequeno { background: #e65100; color: white; font-size: 10px; font-weight: bold; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-bottom: 4px; }
+        .titulo-promocao-pequeno { font-size: 15px; font-weight: bold; color: #e65100; margin: 0 0 4px 0; }
+        .desc-promocao-pequena { font-size: 11px; color: #5d4037; margin: 0 0 6px 0; line-height: 1.3; }
+        .btn-promocao-pequeno { background: linear-gradient(135deg, #ff9800, #e65100); color: white; border: none; padding: 6px 12px; border-radius: 30px; font-weight: bold; font-size: 12px; cursor: pointer; transition: transform 0.2s; text-transform: uppercase; }
+        .btn-promocao-pequeno:active { transform: scale(0.96); }
+
+        .pizza-card, .bebida-card { background: white; border-radius: 12px; display: flex; margin-bottom: 15px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); align-items: center; cursor: pointer; transition: all 0.2s; }
+        .pizza-card:active, .bebida-card:active { transform: scale(0.99); }
+        .pizza-img-wrapper { margin-right: 15px; width: 80px; height: 80px; flex-shrink: 0; }
+        .pizza-img { width: 100%; height: 100%; border-radius: 10px; object-fit: cover; }
+        .bebida-icon { font-size: 48px; margin-right: 15px; }
+        .bebida-info { display: flex; flex-direction: column; justify-content: center; gap: 4px; width: 100%; }
+        .bebida-nome { font-size: 15px; font-weight: bold; margin: 0; }
+        .bebida-preco { font-size: 16px; font-weight: bold; color: var(--verde); margin-top: 5px; }
+        .pizza-info { display: flex; flex-direction: column; justify-content: center; gap: 4px; width: 100%; }
+        .pizza-nome { font-size: 14px; font-weight: bold; margin: 0; text-transform: uppercase; color: #333; }
+        .preco-e-botao, .bebida-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+        .pizza-preco { font-size: 16px; font-weight: bold; color: var(--verde); display: inline-block; }
+        .btn-adicionar-pizza, .btn-adicionar-bebida {
+            background: var(--verde); color: white; border: none; padding: 5px 12px;
+            border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 5px;
+            transition: transform 0.1s, background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .btn-adicionar-pizza:active, .btn-adicionar-bebida:active { 
+            background: #1b5e20; 
+            transform: scale(0.92); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .selo-pizza { align-self: flex-start; background: var(--ouro); color: #fff; font-size: 9px; font-weight: bold; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; margin-bottom: 2px; display: inline-block; }
+        .selo-opcao { background: var(--ouro); color: #fff; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-left: 8px; display: inline-block; }
+
+        .btn-ver-mais { background: #fff; border: 2px solid var(--vermelho); color: var(--vermelho); padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 13px; margin: 10px 0 25px; cursor: pointer; text-transform: uppercase; width: 100%; display: block; }
+        .btn-ver-mais:active { background: var(--vermelho); color: #fff; }
+
+        .select-sabor { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 15px; font-family: inherit; margin-bottom: 12px; background-color: #fafafa; }
+        .select-sabor:focus { border-color: var(--vermelho); }
+
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0); display: none; z-index: 2000; transition: background 0.4s ease; }
+        .modal.active { background: rgba(0,0,0,0.8); display: flex; align-items: flex-end; }
+        .modal-content { background: white; width: 100%; max-width: 500px; margin: 0 auto; height: 85vh; border-radius: 25px 25px 0 0; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .modal.active .modal-content { transform: translateY(0); }
+        .modal-scroll-area { flex: 1; overflow-y: auto; padding: 0 20px; padding-bottom: 120px; }
+        .modal-header img { width: calc(100% + 40px); margin-left: -20px; height: 220px; object-fit: cover; }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; z-index: 2001; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .opcoes-titulo { font-weight: bold; margin: 20px 0 10px; border-left: 4px solid var(--vermelho); padding-left: 8px; font-size: 14px; background: #f9f9f9; padding: 8px; }
+        .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .modal-footer { background: white; padding: 15px 20px; border-top: 1px solid #eee; }
+        .btn-confirmar { background: var(--verde); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; }
+
+        .btn-whats { position: fixed; bottom: 30px; right: 20px; width: 60px; height: 60px; background: var(--whats); border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 998; }
+        .btn-whats img { width: 35px; }
+
+        .campo-troco { display: none; margin-top: 10px; padding: 10px; background: #fffde7; border: 1px solid #fff59d; border-radius: 8px; }
+        .campo-troco input { width: 120px; padding: 6px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .campo-endereco { display: block; margin-top: 10px; padding: 12px; background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; }
+        .campo-endereco textarea { width: 100%; height: 60px; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; resize: none; }
+
+        .cart-item { background: #f9f9f9; border-radius: 12px; padding: 12px; margin-bottom: 12px; border-left: 4px solid var(--vermelho); }
+        .cart-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+        .cart-item-name { font-weight: bold; font-size: 15px; color: #333; }
+        .cart-item-badge { font-size: 11px; background: #eee; padding: 2px 8px; border-radius: 12px; color: #666; cursor: pointer; transition: background 0.2s; }
+        .cart-item-badge:hover { background: #ddd; }
+        .cart-item-detail-line { font-size: 12px; color: #555; padding: 4px 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .cart-item-detail-line .emoji { font-size: 14px; }
+        .cart-item-price { color: var(--verde); font-weight: bold; font-size: 14px; margin-top: 8px; text-align: right; }
+        .cart-item-actions { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; flex-wrap: wrap; }
+        .btn-edit, .btn-remove, .btn-details { padding: 6px 14px; border-radius: 20px; font-size: 12px; cursor: pointer; border: none; font-weight: 500; }
+        .btn-edit { background: #e0e0e0; color: #333; }
+        .btn-remove { background: #ffebee; color: var(--vermelho); }
+        .btn-details { background: #e3f2fd; color: #1565c0; }
+
+        .btn-adicionar-mais { background: #fff; border: 2px dashed var(--vermelho); color: var(--vermelho); padding: 8px 12px; border-radius: 25px; text-align: center; font-weight: bold; font-size: 12px; margin: 15px 0; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: auto; }
+        .btn-finalizar-whats { background: var(--verde); color: white; border: none; padding: 12px 16px; border-radius: 25px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; margin: 15px 0 10px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+        .details-modal-content { background: white; width: 100%; max-width: 500px; margin: 0 auto; border-radius: 25px 25px 0 0; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); max-height: 90vh; }
+        .details-modal.active .details-modal-content { transform: translateY(0); }
+        .details-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0); display: none; z-index: 2100; transition: background 0.4s ease; align-items: flex-end; }
+        .details-modal.active { background: rgba(0,0,0,0.8); display: flex; }
+        .details-scroll-area { flex: 1; overflow-y: auto; padding: 20px; }
+        .details-header { text-align: center; margin-bottom: 20px; }
+        .details-img { width: 100%; height: 200px; object-fit: cover; border-radius: 16px; margin-bottom: 15px; }
+        .details-info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .details-label { font-weight: bold; color: #555; }
+        .details-value { color: #333; text-align: right; }
+        .details-badge { display: inline-block; background: var(--ouro); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+
+        .mapa-container { width: 100%; overflow: hidden; border-radius: 15px; margin-bottom: 15px; min-height: 250px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; }
+        .btn-rota { background: var(--azul-maps); color: white; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; margin-bottom: 25px; }
+
+        .espaco-anunciante {
+            width: 100%;
+            position: relative;
+            background: #f7f7f7;
+            border-radius: 16px;
+            border: 2px dashed #ccc;
+            margin: 25px 0;
+            overflow: hidden;
+            transition: background 0.2s;
+            cursor: default;
+        }
+        .espaco-anunciante::before {
+            content: "";
+            display: block;
+            padding-bottom: 31.25%;
+        }
+        .espaco-anunciante .conteudo-anunciante {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+        .espaco-anunciante .conteudo-anunciante .icone {
+            font-size: 28px;
+            margin-bottom: 6px;
+            opacity: 0.6;
+        }
+        .espaco-anunciante .conteudo-anunciante .titulo-anuncio {
+            font-weight: 600;
+            color: #666;
+            margin: 0 0 4px 0;
+            font-size: 15px;
+        }
+        .espaco-anunciante .conteudo-anunciante .cta-anuncio {
+            font-size: 12px;
+            color: var(--vermelho);
+            background: rgba(211,47,47,0.08);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: background 0.2s;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            margin-top: 4px;
+        }
+        .espaco-anunciante .conteudo-anunciante .cta-anuncio:hover {
+            background: rgba(211,47,47,0.15);
+        }
+        .espaco-anunciante .conteudo-anunciante .subtexto {
+            font-size: 11px;
+            color: #bbb;
+            margin-top: 4px;
+        }
+
+        .cart-modal-content { background: white; width: 100%; max-width: 500px; margin: 0 auto; border-radius: 25px 25px 0 0; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); height: 90vh; }
+        .cart-modal.active .cart-modal-content { transform: translateY(0); }
+        .cart-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0); display: none; z-index: 2000; transition: background 0.4s ease; align-items: flex-end; }
+        .cart-modal.active { background: rgba(0,0,0,0.8); display: flex; }
+        .cart-scroll-area { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 30px; }
+        .troco-obrigatorio { color: #d32f2f; font-size: 11px; margin-top: 5px; display: block; }
+        .bebida-radio-group { margin: 10px 0; }
+        .bebida-radio-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+
+        .pizza-card.pesquisa-oculto,
+        .bebida-card.pesquisa-oculto {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <div class="splash-content">
+            <img src="https://i.ibb.co/tpqXXKPN/1000254310-removebg-preview-1.png" class="splash-logo" alt="Pizzaria Brasiliana">
+            <div class="splash-loader"></div>
+        </div>
+    </div>
+
+    <div class="letreiro-copa" id="letreiro-copa">
+        <div class="marquee">
+            <span>⚽ A COPA VEM AÍ! ⚽</span>
+            <span>|</span>
+            <span id="contagem-regressiva" class="contagem-regressiva">Carregando...</span>
+            <span>|</span>
+            <span>🔜 Combos exclusivos em breve na Brasiliana! 🇧🇷</span>
+            <span>|</span>
+            <span>🏟️ Fique ligado! 🍕</span>
+        </div>
+    </div>
+
+    <header>
+        <img src="https://i.ibb.co/tpqXXKPN/1000254310-removebg-preview-1.png" class="logo" alt="Pizzaria Brasiliana">
+        <div class="cart-icon" id="btn-carrinho" onclick="abrirCarrinho()">
+            🛒 PEDIDO (<span id="cart-count">0</span>)
+        </div>
+    </header>
+
+    <nav id="main-nav">
+        <a href="#especiais">⭐ Especiais</a>
+        <a href="#classicas">🍕 Clássicas</a>
+        <a href="#promocao">🔥 PROMOÇÃO</a>
+        <a href="#economicas">💰 Econômicas</a>
+        <a href="#doces">🍫 Doces</a>
+        <a href="#bebidas">🥤 Bebidas</a>
+        <a href="#localizacao">📍 Localização</a>
+    </nav>
+
+    <div class="container">
+        <div class="search-container">
+            <span class="search-icon">🔎</span>
+            <input type="text" id="search-input" placeholder="Pesquise por nome ou ingrediente..." oninput="abrirModalPesquisa()">
+            <span class="search-clear" id="search-clear" onclick="limparPesquisa()">✕</span>
+        </div>
+
+        <div class="btn-meio-meio" onclick="abrirModalMeioMeio()">
+            🍕 MONTAR PIZZA MEIO A MEIO (2 SABORES)
+        </div>
+
+        <div class="dicas-meio-meio">
+            <div class="combinacoes-titulo">
+                🔥 Combinações queridinhas pela galera (clique e monte já!)
+            </div>
+            <div class="grid-combinacoes" id="grid-combinacoes">
+            </div>
+        </div>
+
+        <section id="especiais"><div class="titulo-secao">⭐ ESPECIAIS DA CASA</div><div id="lista-pizzas-especiais"></div><button id="btn-mais-especiais" class="btn-ver-mais" onclick="mostrarMais('especiais')">Mostrar mais Especiais</button></section>
+        <section id="classicas"><div class="titulo-secao">🍕 PIZZAS CLÁSSICAS</div><div id="lista-pizzas-classicas"></div><button id="btn-mais-classicas" class="btn-ver-mais" onclick="mostrarMais('classicas')">Mostrar mais Clássicas</button></section>
+        <section id="promocao"><div class="secao-promocao"><img src="https://i.ibb.co/PGm6t0ps/IMG-20260522-WA0014.jpg" alt="Promoção" class="img-promocao-pequena"><div class="promocao-info"><div class="badge-promocao-pequeno">🔥 OFERTA ESPECIAL 🔥</div><div class="titulo-promocao-pequeno">Compre 1 Pizza Grande (8 fatias)</div><div class="desc-promocao-pequena">Ganhe: <strong>Guaraná Mineiro 1,5L</strong> ou <strong>Borda Recheada Catupiry</strong>!</div><button class="btn-promocao-pequeno" onclick="abrirModalPromocao()">🎁 QUERO ESSA PROMOÇÃO</button></div></div></section>
+        <section id="economicas"><div class="titulo-secao" style="color:var(--verde); border-color:var(--verde)">💰 PIZZAS ECONÔMICAS</div><div id="lista-pizzas-economicas"></div><button id="btn-mais-economicas" class="btn-ver-mais" onclick="mostrarMais('economicas')">Mostrar mais Econômicas</button></section>
+
+        <div class="espaco-anunciante">
+            <div class="conteudo-anunciante">
+                <div class="icone">📢</div>
+                <div class="titulo-anuncio">Espaço para anunciante</div>
+                <a href="https://wa.me/5534991058994?text=Olá,%20gostaria%20de%20anunciar%20no%20cardápio%20da%20Pizzaria%20Brasiliana!" target="_blank" class="cta-anuncio">👉 Anuncie agora</a>
+                <div class="subtexto">Destaque sua marca para nossos clientes</div>
+            </div>
+        </div>
+
+        <section id="doces"><div class="titulo-secao" style="color:var(--marrom); border-color:var(--marrom)">🍫 PIZZAS DOCES</div><div id="lista-pizzas-doces"></div></section>
+        
+        <section id="bebidas"><div class="titulo-secao" style="color:#1565c0; border-color:#1565c0">🥤 BEBIDAS</div><div id="lista-bebidas"></div></section>
+
+        <div class="espaco-anunciante">
+            <div class="conteudo-anunciante">
+                <div class="icone">📢</div>
+                <div class="titulo-anuncio">Seu anúncio aqui</div>
+                <a href="https://wa.me/5534991058994?text=Olá,%20gostaria%20de%20anunciar%20no%20cardápio%20da%20Pizzaria%20Brasiliana!" target="_blank" class="cta-anuncio">👉 Quero anunciar</a>
+                <div class="subtexto">Público qualificado, visibilidade garantida</div>
+            </div>
+        </div>
+
+        <section id="localizacao"><div class="titulo-secao" style="color: var(--azul-maps); border-color: var(--azul-maps)">📍 NOSSA LOCALIZAÇÃO</div><div class="mapa-container" id="map-container"><div style="padding: 20px; text-align: center;">🗺️ Mapa será carregado aqui...</div></div><a href="https://maps.google.com/?q=Pizzaria+Brasiliana" target="_blank" class="btn-rota">🗺️ ABRIR ROTA NO GPS</a></section>
+    </div>
+
+    <div class="search-results-modal" id="search-results-modal" onclick="if(event.target == this) fecharModalPesquisa()">
+        <div class="search-results-box">
+            <div class="search-results-header">
+                <div class="top-row">
+                    <h3>🔎 Resultados</h3>
+                    <button class="close-btn" onclick="fecharModalPesquisa()">✕</button>
+                </div>
+                <div class="search-term-display" id="search-term-display">
+                    Buscando por: <strong id="search-term-text"></strong>
+                </div>
+            </div>
+            <div class="search-results-list" id="search-results-list">
+            </div>
+        </div>
+    </div>
+
+    <div id="promocao-modal" class="modal" onclick="if(event.target == this) fecharModalPromocao()">
+        <div class="modal-content" style="height: auto; max-height: 90vh;"><div class="modal-close" onclick="fecharModalPromocao()">✕</div><div class="modal-scroll-area" style="padding-bottom: 20px;"><div class="modal-header"><img id="promo-modal-img" src="https://i.ibb.co/PGm6t0ps/IMG-20260522-WA0014.jpg" style="height: 150px;"></div><h2 style="margin: 15px 0 5px; color: #e65100;">🎁 PROMOÇÃO ESPECIAL</h2><p style="color:#666; font-size: 14px;">Na compra de qualquer pizza grande (8 fatias), ganhe um brinde à sua escolha:</p><div class="opcoes-titulo">🍕 1. ESCOLHA A PIZZA</div><select id="select-pizza-promocao" class="select-sabor" onchange="atualizarPrecoPromocao()"></select><div style="font-size: 14px; margin-bottom: 10px;">Valor da pizza: <strong id="promo-pizza-preco">R$ 0,00</strong></div><div class="opcoes-titulo">🎁 2. ESCOLHA SEU BRINDE</div><div id="lista-brindes"><div class="opcao-item"><label><input type="radio" name="brinde" value="refri" checked> 🥤 Guaraná Mineiro 1,5 Litros</label><span style="color: var(--verde); font-weight: bold;">GRÁTIS</span></div><div class="opcao-item"><label><input type="radio" name="brinde" value="borda"> 🧀 Borda Recheada de Catupiry</label><span style="color: var(--verde); font-weight: bold;">GRÁTIS</span></div></div><div class="opcoes-titulo">ESCOLHA A BORDA (adicional)</div><div id="modal-lista-bordas-promo"></div><div class="opcoes-titulo">ADICIONAIS EXTRAS</div><div id="modal-lista-extras-promo"></div></div><div class="modal-footer"><div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom:12px; font-size: 18px;"><span>Total:</span><span id="promo-total-item">R$ 0,00</span></div><button class="btn-confirmar" onclick="adicionarPromocaoAoCarrinho()">✅ ADICIONAR PROMOÇÃO AO PEDIDO</button></div></div>
+    </div>
+    <div id="details-modal" class="details-modal" onclick="if(event.target == this) fecharModalDetalhes()">
+        <div class="details-modal-content"><div class="modal-close" onclick="fecharModalDetalhes()">✕</div><div class="details-scroll-area"><div class="details-header"><img id="details-img" src="" class="details-img"><div class="details-badge" id="details-badge"></div><h2 id="details-nome" style="margin: 10px 0;">Carregando...</h2></div><div id="details-content"></div><div style="display: flex; gap: 10px; margin-top: 25px;"><button class="btn-confirmar" style="background: #666;" onclick="fecharModalDetalhes()">🔙 FECHAR</button><button class="btn-confirmar" id="details-edit-btn" onclick="editarDoModal()">✏️ EDITAR ITEM</button></div></div></div>
+    </div>
+    <div id="pizza-modal" class="modal" onclick="if(event.target == this) fecharModal()">
+        <div class="modal-content"><div class="modal-close" onclick="fecharModal()">✕</div><div class="modal-scroll-area"><div class="modal-header"><img id="modal-img" src=""></div><h2 id="modal-nome" style="margin: 20px 0 10px;"></h2><p id="modal-desc" style="color:#666; font-size: 14px;"></p><div id="container-selecao-sabores" style="display: none;"><div class="opcoes-titulo">PRIMEIRA METADE (SABOR 1)</div><select id="select-sabor-1" class="select-sabor" onchange="atualizarSaborMeioMeio()"></select><div class="opcoes-titulo">SEGUNDA METADE (SABOR 2)</div><select id="select-sabor-2" class="select-sabor" onchange="atualizarSaborMeioMeio()"></select></div><div class="opcoes-titulo">ESCOLHA A BORDA</div><div id="modal-lista-bordas"></div><div class="opcoes-titulo">ADICIONAIS EXTRAS</div><div id="modal-lista-extras"></div>
+        <div class="opcoes-titulo">🥤 ESCOLHA UMA BEBIDA (OPCIONAL)</div>
+        <div id="modal-lista-bebidas"></div>
+        </div><div class="modal-footer"><div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom:12px;"><span>Subtotal:</span><span id="modal-total-item">R$ 0,00</span></div><button class="btn-confirmar" onclick="adicionarAoCarrinho()">ADICIONAR AO PEDIDO</button></div></div>
+    </div>
+    <div id="cart-modal" class="cart-modal" onclick="if(event.target == this) fecharCarrinho()">
+        <div class="cart-modal-content"><div class="modal-close" onclick="fecharCarrinho()">✕</div><div class="cart-scroll-area"><h2 style="color: var(--vermelho); margin: 0 0 15px 0;">🛒 Meu Pedido</h2><div id="carrinho-itens" style="margin-bottom: 15px;"></div><div style="display: flex; justify-content: center; margin: 10px 0;"><button class="btn-adicionar-mais" onclick="fecharCarrinho()">🍕 + QUERO ESCOLHER MAIS UMA PIZZA</button></div><div class="opcoes-titulo" style="margin-top: 10px;">🚚 COMO DESEJA RECEBER?</div><div style="display: flex; gap: 20px;"><label><input type="radio" name="entrega_tipo" value="Entrega" checked onclick="gerenciarCampoEndereco(true)"> 🛵 Entrega</label><label><input type="radio" name="entrega_tipo" value="Retirada" onclick="gerenciarCampoEndereco(false)"> 🏬 Retirar</label></div><div id="area-endereco" class="campo-endereco"><label>Bairro para frete:</label><select id="select-bairro" class="select-sabor" onchange="calcularFrete()"><option value="0">Escolha...</option><option value="5.00">Centro - R$5,00</option><option value="8.00">Santa Mônica - R$8,00</option><option value="12.00">Granja Marileusa - R$12,00</option></select><textarea id="txt-endereco" placeholder="Rua, Número, Complemento"></textarea></div><div class="opcoes-titulo">💳 PAGAMENTO</div><div style="display: flex; gap: 15px; flex-wrap: wrap;"><label><input type="radio" name="pagamento" value="Pix" checked onclick="gerenciarCampoTroco(false)"> 📱 Pix</label><label><input type="radio" name="pagamento" value="Cartão" onclick="gerenciarCampoTroco(false)"> 💳 Cartão</label><label><input type="radio" name="pagamento" value="Dinheiro" onclick="gerenciarCampoTroco(true)"> 💵 Dinheiro</label></div><div id="area-troco" class="campo-troco"><label>Troco para R$ <input type="number" id="valor-troco" placeholder="Ex: 100.00" step="0.01" min="0"></label><span class="troco-obrigatorio" id="troco-obrigatorio-msg" style="display: none;">⚠️ Campo obrigatório para pagamento em dinheiro</span></div><div style="display:flex; justify-content:space-between; font-weight:bold; font-size:19px; margin-top: 15px; padding-top: 10px; border-top: 2px solid #eee;"><span>TOTAL:</span><span id="carrinho-total">R$ 0,00</span></div><button class="btn-finalizar-whats" onclick="enviarWhatsApp()">📲 FINALIZAR NO WHATSAPP</button></div></div>
+    </div>
+    <a href="https://wa.me/5534996754100" class="btn-whats" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png"></a>
+
+    <script>
+        const dadosPizzas = [
+            {id:"01",nome:"BRASILIANA",preco:79.90,img:"https://i.ibb.co/m5YybcfK/file-000000002d6471fb9662313aa0656e6a.png",desc:"Presunto, mussarela, frango, bacon, tomate, calabresa, milho, ervilha, cebola e azeitona.", tipo:"especiais", destaque:true},
+            {id:"02",nome:"4 QUEIJOS",preco:83.90,img:"https://i.ibb.co/cKCbbc4f/a2b247b0-4b47-11f1-8d2b-1dd607eaae00.png",desc:"Mussarela, parmezone, provolone e catupiry.", tipo:"especiais"},
+            {id:"03",nome:"PORTUGUESA",preco:72.90,img:"https://i.ibb.co/vC2kBSnv/IMG-20260508-WA0035.jpg",desc:"Presunto, mussarela, tomate, ervilha, ovos cozidos e azeitonas.", tipo:"especiais", destaque:true},
+            {id:"04",nome:"CALABRESA",preco:74.90,img:"https://i.ibb.co/RpZPDSKb/IMG-20260508-WA0036.jpg",desc:"Mussarela, cebola, calabresa, tomate e orégano.", tipo:"especiais", destaque:true},
+            {id:"10",nome:"FRANGO COM CATUPIRY",preco:78.90,img:"https://i.ibb.co/vvdrTwKH/e5ef0e40-4c06-11f1-8d2b-1dd607eaae00.png",desc:"Mussarela, frango, queijo e catupiry.", tipo:"especiais"},
+            {id:"12",nome:"FRANGO C/ CATUPIRY E PASSAS",preco:81.90,img:"https://i.ibb.co/XfCX0mqM/IMG-20260509-WA0004.jpg",desc:"Mussarela, milho, frango, catupiry e uvas passas.", tipo:"especiais"},
+            {id:"15",nome:"HAVAIANA",preco:79.90,img:"https://i.ibb.co/Ldy0rw4w/denithy-pizza-5501075-1920.jpg",desc:"Presunto, mussarela, bacon e abacaxi.", tipo:"especiais"},
+            {id:"21",nome:"A MODA DO PIZZAIOLO",preco:85.90,img:"https://i.ibb.co/JRjStpp7/23466540-4c1b-11f1-b291-17e7c49e73b4.png",desc:"Mussarela, palmito, presunto, calabresa, frango, milho e bacon.", tipo:"especiais"},
+            {id:"30",nome:"BRASILIANA ESPECIAL",preco:81.90,img:"https://i.ibb.co/nq89q93V/file-00000000e79871f5a2f7ac8d0e540dd6.png",desc:"Mussarela, presunto, frango, bacon, tomate, calabresa e catupiry.", tipo:"especiais"},
+            {id:"33",nome:"LOMBO CANADENSE",preco:83.90,img:"https://i.ibb.co/1YVtt25N/IMG-20260510-WA0027.jpg",desc:"Mussarela, tomate, catupiry, lombo canadense e orégano.", tipo:"especiais"},
+            {id:"35",nome:"CINCO QUEIJOS",preco:87.90,img:"https://i.ibb.co/rR29NNPb/IMG-20260510-WA0028.jpg",desc:"Mussarela, catupiry, provolone, parmesão e gorgonzola.", tipo:"especiais"},
+            {id:"05",nome:"VEGETARIANA",preco:83.90,img:"https://i.ibb.co/fzNV6K40/ada20230-4b62-11f1-8d2b-1dd607eaae00.png",desc:"Mussarela, tomate, ervilha, cebola, pimentão, milho e palmito.", tipo:"classicas"},
+            {id:"06",nome:"ATUM",preco:83.90,img:"https://i.ibb.co/tTL8KS3W/424c5b00-4bff-11f1-8d2b-1dd607eaae00.png",desc:"Mussarela, atum, tomate, ervilha e cebola.", tipo:"classicas"},
+            {id:"07",nome:"MUSSARELA",preco:75.90,img:"https://i.ibb.co/0VjRRxry/pexels-pedrofurtadoo-33457952.jpg",desc:"Mussarela, molho de tomate e orégano.", tipo:"classicas"},
+            {id:"08",nome:"PIZZAIOLO",preco:71.90,img:"https://i.ibb.co/v4JqQhjd/86438940-4c00-11f1-8d2b-1dd607eaae00.png",desc:"Mussarela, presunto, tomate, cebola, pimentão e milho.", tipo:"classicas"},
+            {id:"09",nome:"FILÉ DE FRANGO",preco:75.90,img:"https://i.ibb.co/G4XN153w/pexels-laura-oliveira-2156849568-34442305.jpg",desc:"Mussarela, frango, milho e cebola.", tipo:"classicas"},
+            {id:"11",nome:"FRANGO COM CREME DE LEITE",preco:81.90,img:"https://i.ibb.co/vx3cwGSW/IMG-20260509-WA0003.jpg",desc:"Mussarela, milho, frango e creme de leite.", tipo:"classicas"},
+            {id:"13",nome:"MINEIRA",preco:71.90,img:"https://i.ibb.co/Pv72gy9v/IMG-20260509-WA0005.jpg",desc:"Presunto, mussarela, cebola, tomate e calabresa.", tipo:"classicas"},
+            {id:"14",nome:"PALMITO",preco:85.90,img:"https://i.ibb.co/JF8NSsqS/IMG-20260509-WA0006.jpg",desc:"Mussarela, palmito, azeitonas, tomate e orégano.", tipo:"classicas"},
+            {id:"16",nome:"CARIOCA",preco:82.90,img:"https://i.ibb.co/v4YkZbWp/zuzi99-pizza-3010062-1920.jpg",desc:"Mussarela, milho, presunto, tomate, palmito e orégano.", tipo:"classicas"},
+            {id:"17",nome:"BACON",preco:75.90,img:"https://i.ibb.co/p6HLS9DV/pexels-anhelina-vasylyk-734724285-34413614.jpg",desc:"Mussarela, tomate, milho, ervilha e bacon.", tipo:"classicas"},
+            {id:"18",nome:"UBERLÂNDIA",preco:82.90,img:"https://i.ibb.co/r2PJVt34/7ca4b7f0-4c15-11f1-b291-17e7c49e73b4-1.png",desc:"Mussarela, palmito, ervilha, cebola e milho.", tipo:"classicas"},
+            {id:"19",nome:"ESPANHOLA",preco:82.90,img:"https://i.ibb.co/wNFrpQkK/falovelykids-pizza-1202775-1920.jpg",desc:"Mussarela, presunto, calabresa, frango e palmito.", tipo:"classicas"},
+            {id:"20",nome:"PAULISTA",preco:70.90,img:"https://i.ibb.co/1Y6ffgrh/pexels-cheese-1869708-1920.jpg",desc:"Mussarela, presunto, tomate, orégano e cebola.", tipo:"classicas"},
+            {id:"22",nome:"PRESUNTO",preco:71.90,img:"https://i.ibb.co/rRZvG9CP/7d553b-5be67f61a7f64218a7a9bf549cb14c62-mv2.jpg",desc:"Presunto, molho de tomate e mussarela.", tipo:"classicas"},
+            {id:"23",nome:"BRASILEIRA",preco:71.90,img:"https://i.ibb.co/bRjnm60n/73452570-4c1d-11f1-b291-17e7c49e73b4.png",desc:"Presunto, tomate, frango, mussarela e catupiry.", tipo:"classicas"},
+            {id:"24",nome:"NAPOLITANO",preco:71.90,img:"https://i.ibb.co/LhqwVXBv/file-00000000587471fb97019b4cfaead407.png",desc:"Mussarela, tomate, orégano e azeitona.", tipo:"classicas"},
+            {id:"25",nome:"MARGUERITA",preco:75.90,img:"https://i.ibb.co/mFvJc92h/0dc95cb0-4cc3-11f1-9182-9db1a6ef9004.png",desc:"Mussarela, tomate, manjericão e azeitonas.", tipo:"classicas"},
+            {id:"26",nome:"TOMATE SECO",preco:84.90,img:"https://i.ibb.co/d0V3q1K1/c104bc10-4cc4-11f1-bba7-596c04ac77f6.png",desc:"Mussarela, cebola, tomate seco e orégano.", tipo:"classicas"},
+            {id:"27",img:"https://i.ibb.co/wG8x5ZC/a7952ba0-4e74-11f1-a14d-af0a80f51fdd.png",nome:"EMPALHADA",preco:75.90,desc:"Mussarela, presunto, tomate, frango, batata palha e catupiry.", tipo:"classicas"},
+            {id:"28",nome:"FRANBACON",preco:76.90,img:"https://i.ibb.co/nq89q93V/file-00000000e79871f5a2f7ac8d0e540dd6.png",desc:"Mussarela, frango, milho e bacon.", tipo:"classicas"},
+            {id:"29",nome:"CALZONE",preco:72.90,img:"https://i.ibb.co/tw4WFn4K/36047e90-4ed9-11f1-a14d-af0a80f51fdd.png",desc:"Massa fechada recheada com ingredientes da casa.", tipo:"classicas"},
+            {id:"31",nome:"BAIANA",preco:75.90,img:"https://i.ibb.co/9kvf0nQg/file-00000000a6d871fb879a9c5fd79e4da1.png",desc:"Mussarela, tomate, calabresa, cebola, pimenta e azeitona.", tipo:"classicas"},
+            {id:"32",nome:"CHAMPION",preco:85.90,img:"https://i.ibb.co/bRHdFk9G/7a45a660-4c22-11f1-b291-17e7c49e73b4.png",desc:"Mussarela, catupiry, champignon, tomate e orégano.", tipo:"classicas"},
+            {id:"34",nome:"RÚCULA",preco:85.90,img:"https://i.ibb.co/39phK8wv/IMG-20260510-WA0026.jpg",desc:"Mussarela, tomate seco, rúcula, búfala e champignon.", tipo:"classicas"},
+            {id:"36",nome:"BOLONHESA",preco:81.90,img:"https://i.ibb.co/MDW24wKB/IMG-20260510-WA0029.jpg",desc:"Molho bolonhesa, mussarela, palmito e azeitona.", tipo:"classicas"},
+            {id:"37",nome:"ECONÔMICA 1",preco:68.90,img:"https://i.ibb.co/whxTxjTP/IMG-20260510-WA0030.jpg",desc:"Presunto, milho, mussarela, bacon e calabresa.", tipo:"economicas"},
+            {id:"38",nome:"ECONÔMICA 2",preco:68.90,img:"https://i.ibb.co/t69H26B/IMG-20260510-WA0031.jpg",desc:"Presunto, milho, mussarela e catupiry.", tipo:"economicas"},
+            {id:"39",nome:"ECONÔMICA 3",preco:68.90,img:"https://i.ibb.co/0p7Kf9my/file-00000000ab0871fbbfa9612bd4a6a24c.png",desc:"Presunto, tomate, frango, mussarela e calabresa.", tipo:"economicas"},
+            {id:"40",nome:"PRESTÍGIO",preco:72.90,img:"https://i.ibb.co/CCLKRYr/file-000000000620720e97c27ac047a86104.png",desc:"Chocolate, côco e brigadeiro.", tipo:"doce"},
+            {id:"41",nome:"SENSAÇÃO",preco:72.90,img:"https://i.ibb.co/zT1gCQW9/1778464336278.png",desc:"Chocolate branco e brigadeiro.", tipo:"doce"},
+            {id:"42",nome:"BANANA",preco:72.90,img:"https://i.ibb.co/Q3NGG5kN/1778464521062.png",desc:"Banana, açúcar e canela.", tipo:"doce"},
+            {id:"43",nome:"FAFÁ DE BELÉM",preco:79.90,img:"https://i.ibb.co/3mzC1mq7/02cb4f70-4d5a-11f1-9fce-e1e5ccc682ac.png",desc:"Pêssego, figo e creme de leite.", tipo:"doce"},
+            {id:"44",nome:"CALIFÓRNIA",preco:79.90,img:"https://i.ibb.co/HfLF9wQf/f8597150-4d5b-11f1-950d-dd961807b7db.png",desc:"Figo, pêssego e abacaxi.", tipo:"doce"}
+        ];
+        const listaBebidas = [
+            {nome:"Suco Del valle", preco:12.00},
+            {nome:"Coca 2 litros", preco:14.00},
+            {nome:"Refrigerante de 1 litro", preco:12.00},
+            {nome:"Mineiro", preco:7.00}
+        ];
+        const listaBordas = [
+            {nome: "SEM BORDA", preco: 0},{nome: "01 - ATUM E MUSSARELA", preco: 20.00},{nome: "02 - MUSSARELA", preco: 15.00, destaque: true},{nome: "03 - PRESUNTO", preco: 13.00},{nome: "04 - CATUPIRY", preco: 13.00, destaque: true},{nome: "05 - MISTA", preco: 17.00},{nome: "06 - CHOCOLATE BRANCO", preco: 15.00},{nome: "07 - CHOCOLATE PRETO", preco: 15.00},{nome: "08 - PROVOLONE", preco: 17.00},{nome: "09 - CHEDDAR", preco: 15.00, destaque: true},{nome: "10 - BANANA", preco: 13.00}
+        ];
+        const listaExtras = [
+            {nome: "Bacon", preco: 12.00, destaque: true},{nome: "Calabresa", preco: 14.00, destaque: true},{nome: "Catupiry Scala", preco: 14.00},{nome: "Frango", preco: 12.00},{nome: "Palmito", preco: 14.00},{nome: "Mussarela", preco: 14.00, destaque: true},{nome: "Batata Palha", preco: 10.00},{nome: "Cheddar", preco: 14.00},{nome: "Ovos", preco: 11.00}
+        ];
+        
+        let carrinho = [], pizzaSendoEditada = null, indexSendoEditado = null, modoMeioMeio = false, visibilidadeCategorias = { especiais: false, classicas: false, economicas: false }, valorFrete = 0, itemIndexParaEditar = null, promocaoPizzaSelecionada = null, promocaoBordaSelecionada = null, promocaoExtrasSelecionados = [];
+
+        function calcularFrete(){ valorFrete=parseFloat(document.getElementById('select-bairro').value)||0; atualizarTotalCarrinho(); }
+        function atualizarTotalCarrinho(){ document.getElementById('carrinho-total').innerHTML=`R$ ${(carrinho.reduce((a,b)=>a+b.total,0)+valorFrete).toFixed(2)}`; }
+
+        function abrirModalDetalhes(index){ 
+            let item=carrinho[index]; itemIndexParaEditar=index;
+            if(item.tipo === 'bebida') {
+                document.getElementById('details-img').src='https://i.ibb.co/0VjRRxry/pexels-pedrofurtadoo-33457952.jpg';
+                document.getElementById('details-badge').innerHTML='🥤 BEBIDA';
+                document.getElementById('details-nome').innerText=item.nome;
+                let html=`<div class="details-info-row"><span class="details-label">💰 Valor:</span><span class="details-value" style="color:#2e7d32;font-weight:bold;">R$ ${item.total.toFixed(2)}</span></div>`;
+                document.getElementById('details-content').innerHTML=html;
+            } else {
+                let pizzaOriginal=dadosPizzas.find(p=>p.id===item.id||p.id===item.id?.replace('PROMO_',''));
+                document.getElementById('details-img').src=pizzaOriginal?.img||'https://i.ibb.co/m5YybcfK/file-000000002d6471fb9662313aa0656e6a.png';
+                let badge=item.ehMeioMeio?'🍕 MEIO A MEIO':item.isPromocao?'🎁 PROMOÇÃO ESPECIAL':'🍕 PIZZA TRADICIONAL';
+                document.getElementById('details-badge').innerHTML=badge;
+                document.getElementById('details-nome').innerText=item.ehMeioMeio?'MEIO A MEIO':(item.titulo||item.nome);
+                let html='';
+                if(item.ehMeioMeio){
+                    let s1=dadosPizzas.find(p=>p.id===item.idSabor1), s2=dadosPizzas.find(p=>p.id===item.idSabor2);
+                    html+=`<div class="details-info-row"><span class="details-label">🍕 Sabor 1:</span><span class="details-value">${s1?.nome||'?'}</span></div><div class="details-info-row"><span class="details-label">🍕 Sabor 2:</span><span class="details-value">${s2?.nome||'?'}</span></div>`;
+                }
+                html+=`<div class="details-info-row"><span class="details-label">🧀 Borda:</span><span class="details-value">${item.borda.nome}</span></div>`;
+                html+=`<div class="details-info-row"><span class="details-label">➕ Extras:</span><span class="details-value">${item.extras&&item.extras.length?item.extras.map(e=>e.nome).join(', '):'Nenhum'}</span></div>`;
+                if(item.bebida) html+=`<div class="details-info-row"><span class="details-label">🥤 Bebida:</span><span class="details-value">${item.bebida.nome} (+R$ ${item.bebida.preco.toFixed(2)})</span></div>`;
+                if(item.brinde) html+=`<div class="details-info-row"><span class="details-label">🎁 Brinde:</span><span class="details-value" style="color:#e65100;">${item.brinde}</span></div>`;
+                html+=`<div class="details-info-row"><span class="details-label">💰 Valor:</span><span class="details-value" style="color:#2e7d32;font-weight:bold;">R$ ${item.total.toFixed(2)}</span></div>`;
+                document.getElementById('details-content').innerHTML=html;
+            }
+            let modal=document.getElementById('details-modal'); modal.style.display='flex'; setTimeout(()=>modal.classList.add('active'),10);
+        }
+        function fecharModalDetalhes(){ let m=document.getElementById('details-modal'); m.classList.remove('active'); setTimeout(()=>m.style.display='none',400); itemIndexParaEditar=null; }
+        function editarDoModal(){ if(itemIndexParaEditar!==null){ fecharModalDetalhes(); editarItemCarrinho(itemIndexParaEditar); } }
+
+        function abrirModalPromocao(){
+            promocaoExtrasSelecionados=[]; promocaoBordaSelecionada=listaBordas[0];
+            let select=document.getElementById('select-pizza-promocao');
+            select.innerHTML=dadosPizzas.filter(p=>p.tipo!=="doce").map(p=>`<option value="${p.id}" data-preco="${p.preco}">${p.id} - ${p.nome} (R$ ${p.preco.toFixed(2)})</option>`).join('');
+            select.selectedIndex=0; atualizarPrecoPromocao();
+            document.getElementById('modal-lista-bordas-promo').innerHTML=listaBordas.map((b,i)=>`<div class="opcao-item"><label><input type="radio" name="borda_promo" onchange="selecionarBordaPromocao(${i})" ${i==0?'checked':''}> ${b.nome}${b.destaque?'<span class="selo-opcao">⭐</span>':''}</label><span>+ R$ ${b.preco.toFixed(2)}</span></div>`).join('');
+            document.getElementById('modal-lista-extras-promo').innerHTML=listaExtras.map((e,i)=>`<div class="opcao-item"><label><input type="checkbox" onchange="toggleExtraPromocao(${i})"> ${e.nome}${e.destaque?'<span class="selo-opcao">🔥</span>':''}</label><span>+ R$ ${e.preco.toFixed(2)}</span></div>`).join('');
+            let modal=document.getElementById('promocao-modal'); modal.style.display='flex'; setTimeout(()=>modal.classList.add('active'),10);
+        }
+        function atualizarPrecoPromocao(){ let sel=document.getElementById('select-pizza-promocao'); let opt=sel.options[sel.selectedIndex]; let preco=parseFloat(opt.getAttribute('data-preco')); promocaoPizzaSelecionada=dadosPizzas.find(p=>p.id===sel.value); document.getElementById('promo-pizza-preco').innerHTML=`R$ ${preco.toFixed(2)}`; atualizarTotalPromocao(); }
+        function selecionarBordaPromocao(i){ promocaoBordaSelecionada=listaBordas[i]; atualizarTotalPromocao(); }
+        function toggleExtraPromocao(i){ let extra=listaExtras[i]; let idx=promocaoExtrasSelecionados.findIndex(e=>e.nome===extra.nome); idx>-1?promocaoExtrasSelecionados.splice(idx,1):promocaoExtrasSelecionados.push(extra); atualizarTotalPromocao(); }
+        function atualizarTotalPromocao(){ let total=promocaoPizzaSelecionada?promocaoPizzaSelecionada.preco:0; total+=promocaoBordaSelecionada?promocaoBordaSelecionada.preco:0; promocaoExtrasSelecionados.forEach(e=>total+=e.preco); document.getElementById('promo-total-item').innerHTML=`R$ ${total.toFixed(2)}`; }
+        function fecharModalPromocao(){ let m=document.getElementById('promocao-modal'); m.classList.remove('active'); setTimeout(()=>m.style.display='none',400); }
+        function adicionarPromocaoAoCarrinho(){
+            if(!promocaoPizzaSelecionada) return;
+            let brindeRadio=document.querySelector('input[name="brinde"]:checked');
+            let brindeTexto=brindeRadio.value==="refri"?"🥤 Guaraná Mineiro 1,5L Grátis":"🧀 Borda Recheada Catupiry Grátis";
+            let item={ id:"PROMO_"+promocaoPizzaSelecionada.id, nome:promocaoPizzaSelecionada.nome, titulo:`🍕 PROMOÇÃO: ${promocaoPizzaSelecionada.nome}`, borda:promocaoBordaSelecionada, extras:[...promocaoExtrasSelecionados], total:promocaoPizzaSelecionada.preco+promocaoBordaSelecionada.preco+promocaoExtrasSelecionados.reduce((a,e)=>a+e.preco,0), ehMeioMeio:false, isPromocao:true, brinde:brindeTexto };
+            carrinho.push(item); atualizarContadorCarrinho(); fecharModalPromocao(); setTimeout(abrirCarrinho,400);
+        }
+        
+        function popularSelectsSabores(){ let opcoes=dadosPizzas.map(p=>`<option value="${p.id}">${p.id} - ${p.nome} (R$ ${p.preco.toFixed(2)})</option>`).join(''); document.getElementById('select-sabor-1').innerHTML=opcoes; document.getElementById('select-sabor-2').innerHTML=opcoes; document.getElementById('select-sabor-2').selectedIndex=1; }
+        
+        function renderizarCardapioPizzas(){ 
+            let sec={ especiais:document.getElementById('lista-pizzas-especiais'), classicas:document.getElementById('lista-pizzas-classicas'), economicas:document.getElementById('lista-pizzas-economicas'), doce:document.getElementById('lista-pizzas-doces') };
+            for(let k in sec) sec[k].innerHTML="";
+            let cont={ especiais:0, classicas:0, economicas:0 }, LIM=4;
+            dadosPizzas.forEach(p=>{
+                let selo=p.destaque?'<div class="selo-pizza">🏆 MAIS PEDIDA</div>':'';
+                let card=`<div class="pizza-card" data-nome="${p.nome} ${p.desc}" onclick="abrirModalPersonalizar('${p.id}')"><div class="pizza-img-wrapper"><img src="${p.img}" class="pizza-img" loading="lazy"></div><div class="pizza-info">${selo}<h3 class="pizza-nome">${p.id} - ${p.nome}</h3><div class="preco-e-botao"><span class="pizza-preco">R$ ${p.preco.toFixed(2)}</span><button class="btn-adicionar-pizza" onclick="event.stopPropagation(); abrirModalPersonalizar('${p.id}')">➕ Adicionar</button></div></div></div>`;
+                if(p.tipo==="doce") sec.doce.innerHTML+=card;
+                else if(visibilidadeCategorias[p.tipo]||cont[p.tipo]<LIM){ sec[p.tipo].innerHTML+=card; cont[p.tipo]++; }
+            });
+            ['especiais','classicas','economicas'].forEach(tipo=>{
+                let total=dadosPizzas.filter(p=>p.tipo===tipo).length;
+                let btn=document.getElementById(`btn-mais-${tipo}`);
+                if(!btn) return;
+                if(total<=LIM) btn.style.display='none';
+                else {
+                    btn.style.display='block';
+                    btn.innerText=visibilidadeCategorias[tipo]?`🔄 Mostrar menos`:`➕ Mostrar mais ${total-LIM} opções`;
+                    btn.setAttribute("onclick", visibilidadeCategorias[tipo]?`ocultarMais('${tipo}')`:`mostrarMais('${tipo}')`);
+                }
+            });
+            let containerBebidas = document.getElementById('lista-bebidas');
+            containerBebidas.innerHTML = listaBebidas.map(b => `
+                <div class="bebida-card" data-nome="${b.nome}" onclick="adicionarBebidaAvulsa('${b.nome}', ${b.preco})">
+                    <div class="bebida-icon">🥤</div>
+                    <div class="bebida-info">
+                        <h3 class="bebida-nome">${b.nome}</h3>
+                        <div class="bebida-actions">
+                            <span class="bebida-preco">R$ ${b.preco.toFixed(2)}</span>
+                            <button class="btn-adicionar-bebida" onclick="event.stopPropagation(); adicionarBebidaAvulsa('${b.nome}', ${b.preco})">➕ Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function adicionarBebidaAvulsa(nome, preco){
+            let item = { tipo:'bebida', nome:nome, total:preco, preco:preco };
+            carrinho.push(item);
+            atualizarContadorCarrinho();
+            abrirCarrinho();
+        }
+        function mostrarMais(c){ visibilidadeCategorias[c]=true; renderizarCardapioPizzas(); }
+        function ocultarMais(c){ visibilidadeCategorias[c]=false; renderizarCardapioPizzas(); document.getElementById(c)?.scrollIntoView({behavior:'smooth'}); }
+        
+        function abrirModalPersonalizar(id){
+            modoMeioMeio=false; indexSendoEditado=null;
+            document.getElementById('container-selecao-sabores').style.display='none';
+            let pizza=dadosPizzas.find(p=>p.id===id);
+            pizzaSendoEditada={...pizza, borda:listaBordas[0], extras:[], bebida:null, total:pizza.preco, ehMeioMeio:false};
+            document.getElementById('modal-img').src=pizza.img;
+            document.getElementById('modal-nome').innerText=pizza.nome;
+            document.getElementById('modal-desc').innerText=pizza.desc;
+            renderizarOpcoesModal(); atualizarTotalModal(); exibirModalFisico();
+        }
+        
+        function abrirMeioMeioComSabores(idSabor1, idSabor2){
+            modoMeioMeio = true;
+            indexSendoEditado = null;
+            document.getElementById('container-selecao-sabores').style.display='block';
+            document.getElementById('modal-img').src="https://i.ibb.co/m5YybcfK/file-000000002d6471fb9662313aa0656e6a.png";
+            document.getElementById('modal-nome').innerText="PIZZA MEIO A MEIO";
+            document.getElementById('modal-desc').innerText="Combine dois sabores. O valor final será a média dos dois.";
+            popularSelectsSabores();
+            document.getElementById('select-sabor-1').value = idSabor1;
+            document.getElementById('select-sabor-2').value = idSabor2;
+            let s1 = dadosPizzas.find(p=>p.id===idSabor1);
+            let s2 = dadosPizzas.find(p=>p.id===idSabor2);
+            let precoMedio = (s1.preco + s2.preco)/2;
+            pizzaSendoEditada = {
+                id:"MM",
+                nome:`½ ${s1.nome} + ½ ${s2.nome}`,
+                idSabor1: idSabor1,
+                idSabor2: idSabor2,
+                borda: listaBordas[0],
+                extras: [],
+                bebida: null,
+                preco: precoMedio,
+                total: precoMedio,
+                ehMeioMeio: true
+            };
+            renderizarOpcoesModal();
+            atualizarTotalModal();
+            exibirModalFisico();
+        }
+
+        function abrirModalMeioMeio(){ abrirMeioMeioComSabores("01", "02"); }
+        
+        function fecharModal(){ let m=document.getElementById('pizza-modal'); m.classList.remove('active'); setTimeout(()=>m.style.display='none',400); }
+        function exibirModalFisico(){ 
+            let m=document.getElementById('pizza-modal'); 
+            m.style.display='flex'; 
+            setTimeout(()=>m.classList.add('active'),10);
+            // Resetar scroll do modal para o topo
+            let scrollArea = m.querySelector('.modal-scroll-area');
+            if (scrollArea) scrollArea.scrollTop = 0;
+        }
+        function atualizarSaborMeioMeio(){
+            if(!modoMeioMeio) return;
+            let id1=document.getElementById('select-sabor-1').value, id2=document.getElementById('select-sabor-2').value;
+            let s1=dadosPizzas.find(p=>p.id===id1), s2=dadosPizzas.find(p=>p.id===id2);
+            pizzaSendoEditada.idSabor1=id1; pizzaSendoEditada.idSabor2=id2;
+            pizzaSendoEditada.preco=(s1.preco+s2.preco)/2;
+            pizzaSendoEditada.nome=`½ ${s1.nome} + ½ ${s2.nome}`;
+            atualizarTotalModal();
+        }
+        function renderizarOpcoesModal(){
+            document.getElementById('modal-lista-bordas').innerHTML=listaBordas.map((b,i)=>`<div class="opcao-item"><label><input type="radio" name="borda" onchange="selecionarBorda(${i})" ${i==0?'checked':''}> ${b.nome}${b.destaque?'<span class="selo-opcao">⭐</span>':''}</label><span>+ R$ ${b.preco.toFixed(2)}</span></div>`).join('');
+            document.getElementById('modal-lista-extras').innerHTML=listaExtras.map((e,i)=>`<div class="opcao-item"><label><input type="checkbox" onchange="toggleExtra(${i})"> ${e.nome}${e.destaque?'<span class="selo-opcao">🔥</span>':''}</label><span>+ R$ ${e.preco.toFixed(2)}</span></div>`).join('');
+            let bebidasHtml = `<div class="bebida-radio-group">`;
+            listaBebidas.forEach((b, idx) => {
+                bebidasHtml += `<div class="bebida-radio-item"><label><input type="radio" name="bebida_pizza" value="${idx}" ${pizzaSendoEditada.bebida && pizzaSendoEditada.bebida.nome === b.nome ? 'checked' : ''} onchange="selecionarBebida(${idx})"> ${b.nome}</label><span>R$ ${b.preco.toFixed(2)}</span></div>`;
+            });
+            bebidasHtml += `<div class="bebida-radio-item"><label><input type="radio" name="bebida_pizza" value="-1" ${!pizzaSendoEditada.bebida ? 'checked' : ''} onchange="removerBebida()"> Nenhuma bebida</label><span>Grátis</span></div></div>`;
+            document.getElementById('modal-lista-bebidas').innerHTML = bebidasHtml;
+        }
+        function selecionarBorda(i){ pizzaSendoEditada.borda=listaBordas[i]; atualizarTotalModal(); }
+        function toggleExtra(i){ let e=listaExtras[i]; let idx=pizzaSendoEditada.extras.findIndex(x=>x.nome===e.nome); idx>-1?pizzaSendoEditada.extras.splice(idx,1):pizzaSendoEditada.extras.push(e); atualizarTotalModal(); }
+        function selecionarBebida(idx){
+            let bebida = listaBebidas[idx];
+            pizzaSendoEditada.bebida = { nome:bebida.nome, preco:bebida.preco };
+            atualizarTotalModal();
+        }
+        function removerBebida(){
+            pizzaSendoEditada.bebida = null;
+            atualizarTotalModal();
+        }
+        function atualizarTotalModal(){ 
+            let t = pizzaSendoEditada.preco + pizzaSendoEditada.borda.preco; 
+            pizzaSendoEditada.extras.forEach(e=>t+=e.preco);
+            if(pizzaSendoEditada.bebida) t += pizzaSendoEditada.bebida.preco;
+            pizzaSendoEditada.total = t; 
+            document.getElementById('modal-total-item').innerHTML=`R$ ${t.toFixed(2)}`; 
+        }
+        function adicionarAoCarrinho(){
+            if(indexSendoEditado!==null) carrinho[indexSendoEditado]={...pizzaSendoEditada};
+            else carrinho.push({...pizzaSendoEditada});
+            indexSendoEditado=null; atualizarContadorCarrinho(); fecharModal(); setTimeout(abrirCarrinho,400);
+        }
+        function removerItem(i){ carrinho.splice(i,1); atualizarContadorCarrinho(); abrirCarrinho(); }
+        function editarItemCarrinho(i){
+            indexSendoEditado=i; let item=carrinho[i]; pizzaSendoEditada=JSON.parse(JSON.stringify(item));
+            if(pizzaSendoEditada.tipo === 'bebida'){
+                alert("Bebidas avulsas não podem ser editadas, remova e adicione novamente.");
+                indexSendoEditado=null;
+                return;
+            }
+            if(pizzaSendoEditada.ehMeioMeio){
+                modoMeioMeio=true; document.getElementById('container-selecao-sabores').style.display='block';
+                popularSelectsSabores();
+                document.getElementById('select-sabor-1').value=pizzaSendoEditada.idSabor1;
+                document.getElementById('select-sabor-2').value=pizzaSendoEditada.idSabor2;
+                atualizarSaborMeioMeio();
+            } else {
+                modoMeioMeio=false; document.getElementById('container-selecao-sabores').style.display='none';
+                document.getElementById('modal-img').src=pizzaSendoEditada.img;
+                document.getElementById('modal-nome').innerText=pizzaSendoEditada.nome;
+                document.getElementById('modal-desc').innerText=pizzaSendoEditada.desc;
+            }
+            renderizarOpcoesModalComDados(); atualizarTotalModal(); fecharCarrinho(); exibirModalFisico();
+        }
+        function renderizarOpcoesModalComDados(){
+            document.getElementById('modal-lista-bordas').innerHTML=listaBordas.map((b,i)=>`<div class="opcao-item"><label><input type="radio" name="borda" onchange="selecionarBorda(${i})" ${pizzaSendoEditada.borda.nome===b.nome?'checked':''}> ${b.nome}${b.destaque?'<span class="selo-opcao">⭐</span>':''}</label><span>+ R$ ${b.preco.toFixed(2)}</span></div>`).join('');
+            document.getElementById('modal-lista-extras').innerHTML=listaExtras.map((e,i)=>`<div class="opcao-item"><label><input type="checkbox" onchange="toggleExtra(${i})" ${pizzaSendoEditada.extras.some(x=>x.nome===e.nome)?'checked':''}> ${e.nome}${e.destaque?'<span class="selo-opcao">🔥</span>':''}</label><span>+ R$ ${e.preco.toFixed(2)}</span></div>`).join('');
+            let bebidasHtml = `<div class="bebida-radio-group">`;
+            listaBebidas.forEach((b, idx) => {
+                bebidasHtml += `<div class="bebida-radio-item"><label><input type="radio" name="bebida_pizza" value="${idx}" ${pizzaSendoEditada.bebida && pizzaSendoEditada.bebida.nome === b.nome ? 'checked' : ''} onchange="selecionarBebida(${idx})"> ${b.nome}</label><span>R$ ${b.preco.toFixed(2)}</span></div>`;
+            });
+            bebidasHtml += `<div class="bebida-radio-item"><label><input type="radio" name="bebida_pizza" value="-1" ${!pizzaSendoEditada.bebida ? 'checked' : ''} onchange="removerBebida()"> Nenhuma bebida</label><span>Grátis</span></div></div>`;
+            document.getElementById('modal-lista-bebidas').innerHTML = bebidasHtml;
+        }
+        function abrirCarrinho(){
+            let cont=document.getElementById('carrinho-itens');
+            if(!carrinho.length){ cont.innerHTML='<div style="text-align:center;padding:30px;color:#999;">🛒 Seu carrinho está vazio</div>'; }
+            else {
+                cont.innerHTML=carrinho.map((p,i)=>{
+                    if(p.tipo === 'bebida') {
+                        return `<div class="cart-item"><div class="cart-item-header"><span class="cart-item-name">🥤 ${p.nome}</span><span class="cart-item-badge" onclick="abrirModalDetalhes(${i})">📋 Item ${i+1}</span></div><div class="cart-item-price">💰 R$ ${p.total.toFixed(2)}</div><div class="cart-item-actions"><button class="btn-details" onclick="abrirModalDetalhes(${i})">📋 VER DETALHES</button><button class="btn-remove" onclick="removerItem(${i})">🗑️ Remover</button></div></div>`;
+                    }
+                    let det='';
+                    if(p.ehMeioMeio){
+                        let s1=dadosPizzas.find(pz=>pz.id===p.idSabor1), s2=dadosPizzas.find(pz=>pz.id===p.idSabor2);
+                        det+=`<div class="cart-item-detail-line"><span class="emoji">🍕</span><strong>Sabores:</strong> ${s1?.nome||'?'} + ${s2?.nome||'?'}</div>`;
+                    }
+                    det+=`<div class="cart-item-detail-line"><span class="emoji">🧀</span><strong>Borda:</strong> ${p.borda.nome}</div>`;
+                    if(p.extras&&p.extras.length) det+=`<div class="cart-item-detail-line"><span class="emoji">➕</span><strong>Extras:</strong> ${p.extras.map(e=>e.nome).join(', ')}</div>`;
+                    if(p.bebida) det+=`<div class="cart-item-detail-line"><span class="emoji">🥤</span><strong>Bebida:</strong> ${p.bebida.nome} (+R$ ${p.bebida.preco.toFixed(2)})</div>`;
+                    if(p.brinde) det+=`<div class="cart-item-detail-line"><span class="emoji">🎁</span><strong>Brinde:</strong> ${p.brinde}</div>`;
+                    return `<div class="cart-item"><div class="cart-item-header"><span class="cart-item-name">${p.ehMeioMeio?'🍕 MEIO A MEIO':(p.isPromocao?'🎁 '+(p.titulo||p.nome):'🍕 '+p.nome)}</span><span class="cart-item-badge" onclick="abrirModalDetalhes(${i})">📋 Item ${i+1}</span></div>${det}<div class="cart-item-price">💰 R$ ${p.total.toFixed(2)}</div><div class="cart-item-actions"><button class="btn-details" onclick="abrirModalDetalhes(${i})">📋 VER DETALHES</button><button class="btn-edit" onclick="editarItemCarrinho(${i})">✏️ Editar</button><button class="btn-remove" onclick="removerItem(${i})">🗑️ Remover</button></div></div>`;
+                }).join('');
+            }
+            atualizarTotalCarrinho(); let modal=document.getElementById('cart-modal'); modal.style.display='flex'; setTimeout(()=>modal.classList.add('active'),10);
+        }
+        function fecharCarrinho(){ let m=document.getElementById('cart-modal'); m.classList.remove('active'); setTimeout(()=>m.style.display='none',400); }
+        function gerenciarCampoEndereco(b){ document.getElementById('area-endereco').style.display=b?'block':'none'; }
+        function gerenciarCampoTroco(b){ document.getElementById('area-troco').style.display=b?'block':'none'; document.getElementById('troco-obrigatorio-msg').style.display=b?'block':'none'; }
+        function atualizarContadorCarrinho(){ document.getElementById('cart-count').innerText=carrinho.length; if(carrinho.length) document.getElementById('btn-carrinho').classList.add('cart-active'); else document.getElementById('btn-carrinho').classList.remove('cart-active'); }
+        function enviarWhatsApp(){
+            if(!carrinho.length){ alert("Carrinho vazio!"); return; }
+            let tipoEntrega=document.querySelector('input[name="entrega_tipo"]:checked').value;
+            let endereco=document.getElementById('txt-endereco').value.trim();
+            if(tipoEntrega==="Entrega"&&!endereco){ alert("Informe seu endereço!"); return; }
+            let pagamento=document.querySelector('input[name="pagamento"]:checked').value, troco="";
+            if(pagamento==="Dinheiro"){ let v=document.getElementById('valor-troco').value.trim(); if(!v){ alert("Informe o valor para troco."); return; } troco=` (Troco para R$ ${v})`; }
+            let texto="*🍕 PEDIDO PIZZARIA BRASILIANA ⚽ COPA 2026*\n\n";
+            carrinho.forEach((p,i)=>{
+                texto+=`*${i+1}.* `;
+                if(p.tipo === 'bebida') texto+=`🥤 *${p.nome}*\n`;
+                else if(p.ehMeioMeio){ let s1=dadosPizzas.find(pz=>pz.id===p.idSabor1), s2=dadosPizzas.find(pz=>pz.id===p.idSabor2); texto+=`*MEIO A MEIO* - ½ ${s1?.nome||'?'} / ½ ${s2?.nome||'?'}\n`; }
+                else if(p.isPromocao) texto+=`*PROMOÇÃO:* ${p.nome}\n`;
+                else texto+=`*${p.nome}*\n`;
+                if(p.borda && p.borda.nome) texto+=`🧀 Borda: ${p.borda.nome}\n`;
+                if(p.extras&&p.extras.length) texto+=`➕ Extras: ${p.extras.map(e=>e.nome).join(', ')}\n`;
+                if(p.bebida) texto+=`🥤 Bebida: ${p.bebida.nome} (+R$ ${p.bebida.preco.toFixed(2)})\n`;
+                if(p.brinde) texto+=`🎁 *BRINDE:* ${p.brinde}\n`;
+                texto+=`💰 Valor: R$ ${p.total.toFixed(2)}\n\n`;
+            });
+            let subtotal=carrinho.reduce((a,b)=>a+b.total,0), totalFinal=subtotal+valorFrete;
+            texto+=`📊 *SUBTOTAL:* R$ ${subtotal.toFixed(2)}\n🚚 *FRETE:* R$ ${valorFrete.toFixed(2)}\n💵 *TOTAL FINAL:* R$ ${totalFinal.toFixed(2)}\n\n`;
+            texto+=`📦 *ENTREGA:* ${tipoEntrega==='Entrega'?'🛵 Entrega':'🏬 Retirada'}\n`;
+            if(tipoEntrega==="Entrega") texto+=`📍 *ENDEREÇO:* ${endereco}\n`;
+            texto+=`💳 *PAGAMENTO:* ${pagamento}${troco}\n\n⏱️ *Previsão:* 40-60 minutos\n⚽ *BOA COPA E BOM APETITE! 🇧🇷*`;
+            window.open(`https://wa.me/5534996754100?text=${encodeURIComponent(texto)}`);
+        }
+
+        const DATA_COPA=new Date('2026-06-11T17:00:00-03:00');
+        function atualizarContagemRegressiva(){ let diff=DATA_COPA-new Date(); if(diff<=0){ document.getElementById('contagem-regressiva').innerHTML='🎉 A COPA COMEÇOU! 🎉'; return; } let d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000); document.getElementById('contagem-regressiva').innerHTML=`⏳ ${d}d ${h}h ${m}m ${s}s`; }
+        setInterval(atualizarContagemRegressiva,1000);
+
+        // ============ NAVEGAÇÃO HORIZONTAL ATUALIZADA ============
+        function highlightNavOnScroll() {
+            let sections = document.querySelectorAll('section[id]');
+            let links = document.querySelectorAll('#main-nav a');
+            let cur = '';
+            sections.forEach(s => {
+                if (window.scrollY >= s.offsetTop - 200) {
+                    cur = s.getAttribute('id');
+                }
+            });
+            links.forEach(l => {
+                l.classList.remove('nav-active');
+                if (l.getAttribute('href') === '#' + cur) {
+                    l.classList.add('nav-active');
+                    l.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            });
+        }
+
+        window.addEventListener('scroll', highlightNavOnScroll);
+        window.addEventListener('load', highlightNavOnScroll);
+        document.querySelectorAll('#main-nav a').forEach(l => l.addEventListener('click', () => setTimeout(highlightNavOnScroll, 500)));
+
+        function popularCombinacoes() {
+            const combinacoes = [
+                { id1:"01", id2:"10", emoji1:"🇧🇷", emoji2:"🧀", nome1:"Brasiliana", nome2:"Frango com Catupiry" },
+                { id1:"02", id2:"10", emoji1:"🧀", emoji2:"🍗", nome1:"4 Queijos", nome2:"Frango com Catupiry" },
+                { id1:"04", id2:"17", emoji1:"🍕", emoji2:"🥓", nome1:"Calabresa", nome2:"Bacon" },
+                { id1:"40", id2:"42", emoji1:"🍫", emoji2:"🍌", nome1:"Prestígio", nome2:"Banana" }
+            ];
+            const grid = document.getElementById('grid-combinacoes');
+            grid.innerHTML = combinacoes.map(comb => `
+                <div class="combinacao-item" onclick="abrirMeioMeioComSabores('${comb.id1}', '${comb.id2}')">
+                    <div class="combinacao-emoji">${comb.emoji1} ${comb.emoji2}</div>
+                    <div class="combinacao-nome">${comb.nome1} + ${comb.nome2}</div>
+                    <span style="font-size:10px; color:#e65100;">⚡</span>
+                </div>
+            `).join('');
+        }
+
+        function initMapLazyLoad() {
+            const mapContainer = document.getElementById('map-container');
+            if (!mapContainer) return;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        mapContainer.innerHTML = '<iframe src="https://maps.google.com/maps?q=Pizzaria%20Brasiliana&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>';
+                        observer.disconnect();
+                    }
+                });
+            }, { rootMargin: "200px" });
+            observer.observe(mapContainer);
+        }
+
+        // ============= PESQUISA COM MODAL =============
+        function abrirModalPesquisa() {
+            const termo = document.getElementById('search-input').value.trim().toLowerCase();
+            const clearBtn = document.getElementById('search-clear');
+            const modal = document.getElementById('search-results-modal');
+            const list = document.getElementById('search-results-list');
+            const termDisplay = document.getElementById('search-term-text');
+
+            if (termo === '') {
+                fecharModalPesquisa();
+                clearBtn.classList.remove('visible');
+                return;
+            }
+
+            clearBtn.classList.add('visible');
+            termDisplay.textContent = termo;
+
+            const resultados = [];
+
+            dadosPizzas.forEach(p => {
+                const texto = (p.nome + ' ' + p.desc).toLowerCase();
+                if (texto.includes(termo)) {
+                    resultados.push({
+                        tipo: 'pizza',
+                        id: p.id,
+                        nome: p.nome,
+                        preco: p.preco,
+                        img: p.img,
+                        desc: p.desc
+                    });
+                }
+            });
+
+            listaBebidas.forEach(b => {
+                if (b.nome.toLowerCase().includes(termo)) {
+                    resultados.push({
+                        tipo: 'bebida',
+                        nome: b.nome,
+                        preco: b.preco,
+                        img: null
+                    });
+                }
+            });
+
+            let html = '';
+            if (resultados.length === 0) {
+                html = `<div class="search-no-results">
+                            😕 <strong>Não encontramos</strong> nenhum item com "<strong>${termo}</strong>".<br>
+                            <span style="font-size:13px; color:#aaa;">Tente "frango", "calabresa" ou "catupiry"</span>
+                        </div>`;
+            } else {
+                resultados.forEach(item => {
+                    if (item.tipo === 'pizza') {
+                        html += `
+                            <div class="search-result-item">
+                                <img src="${item.img}" class="search-result-img" alt="${item.nome}" loading="lazy">
+                                <div class="search-result-info">
+                                    <div class="nome">${item.nome}</div>
+                                    <div class="desc">${item.desc}</div>
+                                    <div class="preco">R$ ${item.preco.toFixed(2)}</div>
+                                </div>
+                                <div class="search-result-actions">
+                                    <button onclick="fecharModalPesquisa(); abrirModalPersonalizar('${item.id}')">➕</button>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="search-result-item">
+                                <div class="search-result-img" style="background:#eee; display:flex; align-items:center; justify-content:center; font-size:32px;">🥤</div>
+                                <div class="search-result-info">
+                                    <div class="nome">${item.nome}</div>
+                                    <div class="preco">R$ ${item.preco.toFixed(2)}</div>
+                                </div>
+                                <div class="search-result-actions">
+                                    <button onclick="fecharModalPesquisa(); adicionarBebidaAvulsa('${item.nome}', ${item.preco})">➕</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            list.innerHTML = html;
+            modal.classList.add('active');
+        }
+
+        function fecharModalPesquisa() {
+            const modal = document.getElementById('search-results-modal');
+            modal.classList.remove('active');
+        }
+
+        function limparPesquisa() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('search-clear').classList.remove('visible');
+            fecharModalPesquisa();
+        }
+
+        window.addEventListener('DOMContentLoaded',() => {
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    let splash = document.getElementById('splash-screen');
+                    if(splash) splash.classList.add('splash-hidden');
+                }, 3500); // <-- AGORA 3,5 SEGUNDOS
+            });
+
+            renderizarCardapioPizzas();
+            popularSelectsSabores();
+            popularCombinacoes();
+            calcularFrete();
+            atualizarContagemRegressiva();
+            initMapLazyLoad();
+
+            document.getElementById('search-clear').addEventListener('click', limparPesquisa);
+        });
+    </script>
+</body>
+</html>
