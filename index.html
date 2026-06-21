@@ -16,6 +16,7 @@
             --verde-copa: #009c3b;
             --amarelo-copa: #ffdf00;
             --azul-copa: #002776;
+            --azul-claro: #1a3a6b;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -430,8 +431,52 @@
         .modal-footer { background: white; padding: 15px 20px; border-top: 1px solid #eee; }
         .btn-confirmar { background: var(--verde); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; }
 
-        .btn-whats { position: fixed; bottom: 30px; right: 20px; width: 60px; height: 60px; background: var(--whats); border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 998; }
+        /* Botões flutuantes */
+        .btn-whats {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--whats);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 998;
+        }
         .btn-whats img { width: 35px; }
+
+        .btn-share {
+            position: fixed;
+            bottom: 100px;  /* acima do WhatsApp */
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: white;  /* fundo branco */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 998;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid var(--azul-copa); /* borda azul-copa */
+            text-decoration: none;
+            padding: 10px;
+        }
+        .btn-share svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+            stroke: var(--azul-copa); /* ícone na cor azul-copa */
+        }
+        .btn-share:active {
+            transform: scale(0.9);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
 
         .campo-troco { display: none; margin-top: 10px; padding: 10px; background: #fffde7; border: 1px solid #fff59d; border-radius: 8px; }
         .campo-troco input { width: 120px; padding: 6px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; }
@@ -664,9 +709,24 @@
     <div id="cart-modal" class="cart-modal" onclick="if(event.target == this) fecharCarrinho()">
         <div class="cart-modal-content"><div class="modal-close" onclick="fecharCarrinho()">✕</div><div class="cart-scroll-area"><h2 style="color: var(--vermelho); margin: 0 0 15px 0;">🛒 Meu Pedido</h2><div id="carrinho-itens" style="margin-bottom: 15px;"></div><div style="display: flex; justify-content: center; margin: 10px 0;"><button class="btn-adicionar-mais" onclick="fecharCarrinho()">🍕 + QUERO ESCOLHER MAIS UMA PIZZA</button></div><div class="opcoes-titulo" style="margin-top: 10px;">🚚 COMO DESEJA RECEBER?</div><div style="display: flex; gap: 20px;"><label><input type="radio" name="entrega_tipo" value="Entrega" checked onclick="gerenciarCampoEndereco(true)"> 🛵 Entrega</label><label><input type="radio" name="entrega_tipo" value="Retirada" onclick="gerenciarCampoEndereco(false)"> 🏬 Retirar</label></div><div id="area-endereco" class="campo-endereco"><label>Bairro para frete:</label><select id="select-bairro" class="select-sabor" onchange="calcularFrete()"><option value="0">Escolha...</option><option value="5.00">Centro - R$5,00</option><option value="8.00">Santa Mônica - R$8,00</option><option value="12.00">Granja Marileusa - R$12,00</option></select><textarea id="txt-endereco" placeholder="Rua, Número, Complemento"></textarea></div><div class="opcoes-titulo">💳 PAGAMENTO</div><div style="display: flex; gap: 15px; flex-wrap: wrap;"><label><input type="radio" name="pagamento" value="Pix" checked onclick="gerenciarCampoTroco(false)"> 📱 Pix</label><label><input type="radio" name="pagamento" value="Cartão" onclick="gerenciarCampoTroco(false)"> 💳 Cartão</label><label><input type="radio" name="pagamento" value="Dinheiro" onclick="gerenciarCampoTroco(true)"> 💵 Dinheiro</label></div><div id="area-troco" class="campo-troco"><label>Troco para R$ <input type="number" id="valor-troco" placeholder="Ex: 100.00" step="0.01" min="0"></label><span class="troco-obrigatorio" id="troco-obrigatorio-msg" style="display: none;">⚠️ Campo obrigatório para pagamento em dinheiro</span></div><div style="display:flex; justify-content:space-between; font-weight:bold; font-size:19px; margin-top: 15px; padding-top: 10px; border-top: 2px solid #eee;"><span>TOTAL:</span><span id="carrinho-total">R$ 0,00</span></div><button class="btn-finalizar-whats" onclick="enviarWhatsApp()">📲 FINALIZAR NO WHATSAPP</button></div></div>
     </div>
-    <a href="https://wa.me/5534996754100" class="btn-whats" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png"></a>
+
+    <!-- BOTÃO COMPARTILHAR - ESTILO COM A PALETA DA MARCA -->
+    <button class="btn-share" onclick="copiarLink()" aria-label="Compartilhar cardápio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3" fill="white"/>
+            <circle cx="6" cy="12" r="3" fill="white"/>
+            <circle cx="18" cy="19" r="3" fill="white"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+    </button>
+
+    <a href="https://wa.me/5534996754100" class="btn-whats" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+    </a>
 
     <script>
+        // ============ TODOS OS DADOS E FUNÇÕES (mantidos inalterados) ============
         const dadosPizzas = [
             {id:"01",nome:"BRASILIANA",preco:79.90,img:"https://i.ibb.co/m5YybcfK/file-000000002d6471fb9662313aa0656e6a.png",desc:"Presunto, mussarela, frango, bacon, tomate, calabresa, milho, ervilha, cebola e azeitona.", tipo:"especiais", destaque:true},
             {id:"02",nome:"4 QUEIJOS",preco:83.90,img:"https://i.ibb.co/cKCbbc4f/a2b247b0-4b47-11f1-8d2b-1dd607eaae00.png",desc:"Mussarela, parmezone, provolone e catupiry.", tipo:"especiais"},
@@ -878,7 +938,6 @@
             let m=document.getElementById('pizza-modal'); 
             m.style.display='flex'; 
             setTimeout(()=>m.classList.add('active'),10);
-            // Resetar scroll do modal para o topo
             let scrollArea = m.querySelector('.modal-scroll-area');
             if (scrollArea) scrollArea.scrollTop = 0;
         }
@@ -1014,7 +1073,6 @@
         function atualizarContagemRegressiva(){ let diff=DATA_COPA-new Date(); if(diff<=0){ document.getElementById('contagem-regressiva').innerHTML='🎉 A COPA COMEÇOU! 🎉'; return; } let d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000); document.getElementById('contagem-regressiva').innerHTML=`⏳ ${d}d ${h}h ${m}m ${s}s`; }
         setInterval(atualizarContagemRegressiva,1000);
 
-        // ============ NAVEGAÇÃO HORIZONTAL ATUALIZADA ============
         function highlightNavOnScroll() {
             let sections = document.querySelectorAll('section[id]');
             let links = document.querySelectorAll('#main-nav a');
@@ -1068,7 +1126,6 @@
             observer.observe(mapContainer);
         }
 
-        // ============= PESQUISA COM MODAL =============
         function abrirModalPesquisa() {
             const termo = document.getElementById('search-input').value.trim().toLowerCase();
             const clearBtn = document.getElementById('search-clear');
@@ -1166,12 +1223,42 @@
             fecharModalPesquisa();
         }
 
+        // ============ COPIAR LINK ============
+        function copiarLink() {
+            const link = 'https://luciano05041983-cloud.github.io/pizzaria-brasiliana-cardapio/';
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(link).then(() => {
+                    alert('✅ Link copiado! Compartilhe com seus amigos! 🍕');
+                }).catch(() => {
+                    copiarLinkFallback(link);
+                });
+            } else {
+                copiarLinkFallback(link);
+            }
+        }
+
+        function copiarLinkFallback(link) {
+            const textarea = document.createElement('textarea');
+            textarea.value = link;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = 0;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                alert('✅ Link copiado! Compartilhe com seus amigos! 🍕');
+            } catch (e) {
+                alert('❌ Não foi possível copiar o link. Copie manualmente: ' + link);
+            }
+            document.body.removeChild(textarea);
+        }
+
         window.addEventListener('DOMContentLoaded',() => {
             window.addEventListener('load', () => {
                 setTimeout(() => {
                     let splash = document.getElementById('splash-screen');
                     if(splash) splash.classList.add('splash-hidden');
-                }, 3500); // <-- AGORA 3,5 SEGUNDOS
+                }, 3500);
             });
 
             renderizarCardapioPizzas();
