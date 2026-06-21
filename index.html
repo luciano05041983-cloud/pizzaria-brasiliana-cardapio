@@ -450,11 +450,11 @@
 
         .btn-share {
             position: fixed;
-            bottom: 100px;  /* acima do WhatsApp */
+            bottom: 100px;
             right: 20px;
             width: 60px;
             height: 60px;
-            background: white;  /* fundo branco */
+            background: white;
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -463,7 +463,7 @@
             z-index: 998;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            border: 2px solid var(--azul-copa); /* borda azul-copa */
+            border: 2px solid var(--azul-copa);
             text-decoration: none;
             padding: 10px;
         }
@@ -471,7 +471,7 @@
             display: block;
             width: 100%;
             height: 100%;
-            stroke: var(--azul-copa); /* ícone na cor azul-copa */
+            stroke: var(--azul-copa);
         }
         .btn-share:active {
             transform: scale(0.9);
@@ -480,6 +480,13 @@
 
         .campo-troco { display: none; margin-top: 10px; padding: 10px; background: #fffde7; border: 1px solid #fff59d; border-radius: 8px; }
         .campo-troco input { width: 120px; padding: 6px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .campo-pix { display: none; margin-top: 10px; padding: 12px; background: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px; }
+        .campo-pix .pix-content { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+        .campo-pix .pix-label { font-weight: bold; color: #0d47a1; font-size: 14px; }
+        .campo-pix .pix-chave { font-family: monospace; font-size: 16px; background: white; padding: 4px 10px; border-radius: 4px; border: 1px solid #ccc; word-break: break-all; }
+        .btn-copiar-pix { background: #0d47a1; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 13px; transition: background 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-copiar-pix:active { background: #0a3a8a; transform: scale(0.96); }
+
         .campo-endereco { display: block; margin-top: 10px; padding: 12px; background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; }
         .campo-endereco textarea { width: 100%; height: 60px; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; resize: none; }
 
@@ -707,10 +714,27 @@
         </div><div class="modal-footer"><div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom:12px;"><span>Subtotal:</span><span id="modal-total-item">R$ 0,00</span></div><button class="btn-confirmar" onclick="adicionarAoCarrinho()">ADICIONAR AO PEDIDO</button></div></div>
     </div>
     <div id="cart-modal" class="cart-modal" onclick="if(event.target == this) fecharCarrinho()">
-        <div class="cart-modal-content"><div class="modal-close" onclick="fecharCarrinho()">✕</div><div class="cart-scroll-area"><h2 style="color: var(--vermelho); margin: 0 0 15px 0;">🛒 Meu Pedido</h2><div id="carrinho-itens" style="margin-bottom: 15px;"></div><div style="display: flex; justify-content: center; margin: 10px 0;"><button class="btn-adicionar-mais" onclick="fecharCarrinho()">🍕 + QUERO ESCOLHER MAIS UMA PIZZA</button></div><div class="opcoes-titulo" style="margin-top: 10px;">🚚 COMO DESEJA RECEBER?</div><div style="display: flex; gap: 20px;"><label><input type="radio" name="entrega_tipo" value="Entrega" checked onclick="gerenciarCampoEndereco(true)"> 🛵 Entrega</label><label><input type="radio" name="entrega_tipo" value="Retirada" onclick="gerenciarCampoEndereco(false)"> 🏬 Retirar</label></div><div id="area-endereco" class="campo-endereco"><label>Bairro para frete:</label><select id="select-bairro" class="select-sabor" onchange="calcularFrete()"><option value="0">Escolha...</option><option value="5.00">Centro - R$5,00</option><option value="8.00">Santa Mônica - R$8,00</option><option value="12.00">Granja Marileusa - R$12,00</option></select><textarea id="txt-endereco" placeholder="Rua, Número, Complemento"></textarea></div><div class="opcoes-titulo">💳 PAGAMENTO</div><div style="display: flex; gap: 15px; flex-wrap: wrap;"><label><input type="radio" name="pagamento" value="Pix" checked onclick="gerenciarCampoTroco(false)"> 📱 Pix</label><label><input type="radio" name="pagamento" value="Cartão" onclick="gerenciarCampoTroco(false)"> 💳 Cartão</label><label><input type="radio" name="pagamento" value="Dinheiro" onclick="gerenciarCampoTroco(true)"> 💵 Dinheiro</label></div><div id="area-troco" class="campo-troco"><label>Troco para R$ <input type="number" id="valor-troco" placeholder="Ex: 100.00" step="0.01" min="0"></label><span class="troco-obrigatorio" id="troco-obrigatorio-msg" style="display: none;">⚠️ Campo obrigatório para pagamento em dinheiro</span></div><div style="display:flex; justify-content:space-between; font-weight:bold; font-size:19px; margin-top: 15px; padding-top: 10px; border-top: 2px solid #eee;"><span>TOTAL:</span><span id="carrinho-total">R$ 0,00</span></div><button class="btn-finalizar-whats" onclick="enviarWhatsApp()">📲 FINALIZAR NO WHATSAPP</button></div></div>
+        <div class="cart-modal-content"><div class="modal-close" onclick="fecharCarrinho()">✕</div><div class="cart-scroll-area"><h2 style="color: var(--vermelho); margin: 0 0 15px 0;">🛒 Meu Pedido</h2><div id="carrinho-itens" style="margin-bottom: 15px;"></div><div style="display: flex; justify-content: center; margin: 10px 0;"><button class="btn-adicionar-mais" onclick="fecharCarrinho()">🍕 + QUERO ESCOLHER MAIS UMA PIZZA</button></div><div class="opcoes-titulo" style="margin-top: 10px;">🚚 COMO DESEJA RECEBER?</div><div style="display: flex; gap: 20px;"><label><input type="radio" name="entrega_tipo" value="Entrega" checked onclick="gerenciarCampoEndereco(true)"> 🛵 Entrega</label><label><input type="radio" name="entrega_tipo" value="Retirada" onclick="gerenciarCampoEndereco(false)"> 🏬 Retirar</label></div><div id="area-endereco" class="campo-endereco"><label>Bairro para frete:</label><select id="select-bairro" class="select-sabor" onchange="calcularFrete()"><option value="0">Escolha...</option><option value="5.00">Centro - R$5,00</option><option value="8.00">Santa Mônica - R$8,00</option><option value="12.00">Granja Marileusa - R$12,00</option></select><textarea id="txt-endereco" placeholder="Rua, Número, Complemento"></textarea></div><div class="opcoes-titulo">💳 PAGAMENTO</div>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <label><input type="radio" name="pagamento" value="Pix" checked onclick="gerenciarPagamento('Pix')"> 📱 Pix</label>
+                <label><input type="radio" name="pagamento" value="Cartão" onclick="gerenciarPagamento('Cartão')"> 💳 Cartão</label>
+                <label><input type="radio" name="pagamento" value="Dinheiro" onclick="gerenciarPagamento('Dinheiro')"> 💵 Dinheiro</label>
+            </div>
+            <!-- Área para exibir a chave Pix -->
+            <div id="area-pix" class="campo-pix">
+                <div class="pix-content">
+                    <span class="pix-label">🔑 Chave Pix (CNPJ):</span>
+                    <span class="pix-chave" id="chave-pix">54233092000189</span>
+                    <button class="btn-copiar-pix" onclick="copiarChavePix()">📋 Copiar</button>
+                </div>
+            </div>
+            <div id="area-troco" class="campo-troco"><label>Troco para R$ <input type="number" id="valor-troco" placeholder="Ex: 100.00" step="0.01" min="0"></label><span class="troco-obrigatorio" id="troco-obrigatorio-msg" style="display: none;">⚠️ Campo obrigatório para pagamento em dinheiro</span></div>
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:19px; margin-top: 15px; padding-top: 10px; border-top: 2px solid #eee;"><span>TOTAL:</span><span id="carrinho-total">R$ 0,00</span></div>
+            <button class="btn-finalizar-whats" onclick="enviarWhatsApp()">📲 FINALIZAR NO WHATSAPP</button>
+        </div></div>
     </div>
 
-    <!-- BOTÃO COMPARTILHAR - ESTILO COM A PALETA DA MARCA -->
+    <!-- BOTÃO COMPARTILHAR -->
     <button class="btn-share" onclick="copiarLink()" aria-label="Compartilhar cardápio">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="18" cy="5" r="3" fill="white"/>
@@ -726,7 +750,7 @@
     </a>
 
     <script>
-        // ============ TODOS OS DADOS E FUNÇÕES (mantidos inalterados) ============
+        // ============ TODOS OS DADOS E FUNÇÕES ============
         const dadosPizzas = [
             {id:"01",nome:"BRASILIANA",preco:79.90,img:"https://i.ibb.co/m5YybcfK/file-000000002d6471fb9662313aa0656e6a.png",desc:"Presunto, mussarela, frango, bacon, tomate, calabresa, milho, ervilha, cebola e azeitona.", tipo:"especiais", destaque:true},
             {id:"02",nome:"4 QUEIJOS",preco:83.90,img:"https://i.ibb.co/cKCbbc4f/a2b247b0-4b47-11f1-8d2b-1dd607eaae00.png",desc:"Mussarela, parmezone, provolone e catupiry.", tipo:"especiais"},
@@ -1039,7 +1063,52 @@
         }
         function fecharCarrinho(){ let m=document.getElementById('cart-modal'); m.classList.remove('active'); setTimeout(()=>m.style.display='none',400); }
         function gerenciarCampoEndereco(b){ document.getElementById('area-endereco').style.display=b?'block':'none'; }
-        function gerenciarCampoTroco(b){ document.getElementById('area-troco').style.display=b?'block':'none'; document.getElementById('troco-obrigatorio-msg').style.display=b?'block':'none'; }
+
+        // NOVA FUNÇÃO para gerenciar exibição de Pix e Troco
+        function gerenciarPagamento(tipo) {
+            // Esconde todos os campos extras
+            document.getElementById('area-troco').style.display = 'none';
+            document.getElementById('area-pix').style.display = 'none';
+            document.getElementById('troco-obrigatorio-msg').style.display = 'none';
+
+            if (tipo === 'Dinheiro') {
+                document.getElementById('area-troco').style.display = 'block';
+                document.getElementById('troco-obrigatorio-msg').style.display = 'block';
+            } else if (tipo === 'Pix') {
+                document.getElementById('area-pix').style.display = 'block';
+            }
+            // Cartão não mostra nada extra
+        }
+
+        // Função para copiar a chave Pix
+        function copiarChavePix() {
+            const chave = document.getElementById('chave-pix').innerText.trim();
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(chave).then(() => {
+                    alert('✅ Chave Pix copiada!');
+                }).catch(() => {
+                    copiarChavePixFallback(chave);
+                });
+            } else {
+                copiarChavePixFallback(chave);
+            }
+        }
+        function copiarChavePixFallback(chave) {
+            const textarea = document.createElement('textarea');
+            textarea.value = chave;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = 0;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                alert('✅ Chave Pix copiada!');
+            } catch (e) {
+                alert('❌ Não foi possível copiar. Chave: ' + chave);
+            }
+            document.body.removeChild(textarea);
+        }
+
         function atualizarContadorCarrinho(){ document.getElementById('cart-count').innerText=carrinho.length; if(carrinho.length) document.getElementById('btn-carrinho').classList.add('cart-active'); else document.getElementById('btn-carrinho').classList.remove('cart-active'); }
         function enviarWhatsApp(){
             if(!carrinho.length){ alert("Carrinho vazio!"); return; }
@@ -1269,6 +1338,9 @@
             initMapLazyLoad();
 
             document.getElementById('search-clear').addEventListener('click', limparPesquisa);
+
+            // Inicializa a exibição do Pix (já que o radio Pix vem marcado como checked)
+            gerenciarPagamento('Pix');
         });
     </script>
 </body>
