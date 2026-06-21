@@ -480,13 +480,6 @@
 
         .campo-troco { display: none; margin-top: 10px; padding: 10px; background: #fffde7; border: 1px solid #fff59d; border-radius: 8px; }
         .campo-troco input { width: 120px; padding: 6px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; }
-        .campo-pix { display: none; margin-top: 10px; padding: 12px; background: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px; }
-        .campo-pix .pix-content { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-        .campo-pix .pix-label { font-weight: bold; color: #0d47a1; font-size: 14px; }
-        .campo-pix .pix-chave { font-family: monospace; font-size: 16px; background: white; padding: 4px 10px; border-radius: 4px; border: 1px solid #ccc; word-break: break-all; }
-        .btn-copiar-pix { background: #0d47a1; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 13px; transition: background 0.2s; display: inline-flex; align-items: center; gap: 5px; }
-        .btn-copiar-pix:active { background: #0a3a8a; transform: scale(0.96); }
-
         .campo-endereco { display: block; margin-top: 10px; padding: 12px; background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; }
         .campo-endereco textarea { width: 100%; height: 60px; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; resize: none; }
 
@@ -720,14 +713,7 @@
                 <label><input type="radio" name="pagamento" value="Cartão" onclick="gerenciarPagamento('Cartão')"> 💳 Cartão</label>
                 <label><input type="radio" name="pagamento" value="Dinheiro" onclick="gerenciarPagamento('Dinheiro')"> 💵 Dinheiro</label>
             </div>
-            <!-- Área para exibir a chave Pix -->
-            <div id="area-pix" class="campo-pix">
-                <div class="pix-content">
-                    <span class="pix-label">🔑 Chave Pix (CNPJ):</span>
-                    <span class="pix-chave" id="chave-pix">54233092000189</span>
-                    <button class="btn-copiar-pix" onclick="copiarChavePix()">📋 Copiar</button>
-                </div>
-            </div>
+            <!-- Área Pix REMOVIDA -->
             <div id="area-troco" class="campo-troco"><label>Troco para R$ <input type="number" id="valor-troco" placeholder="Ex: 100.00" step="0.01" min="0"></label><span class="troco-obrigatorio" id="troco-obrigatorio-msg" style="display: none;">⚠️ Campo obrigatório para pagamento em dinheiro</span></div>
             <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:19px; margin-top: 15px; padding-top: 10px; border-top: 2px solid #eee;"><span>TOTAL:</span><span id="carrinho-total">R$ 0,00</span></div>
             <button class="btn-finalizar-whats" onclick="enviarWhatsApp()">📲 FINALIZAR NO WHATSAPP</button>
@@ -1064,49 +1050,15 @@
         function fecharCarrinho(){ let m=document.getElementById('cart-modal'); m.classList.remove('active'); setTimeout(()=>m.style.display='none',400); }
         function gerenciarCampoEndereco(b){ document.getElementById('area-endereco').style.display=b?'block':'none'; }
 
-        // NOVA FUNÇÃO para gerenciar exibição de Pix e Troco
+        // Função gerenciarPagamento agora só lida com troco, sem Pix
         function gerenciarPagamento(tipo) {
-            // Esconde todos os campos extras
             document.getElementById('area-troco').style.display = 'none';
-            document.getElementById('area-pix').style.display = 'none';
             document.getElementById('troco-obrigatorio-msg').style.display = 'none';
-
             if (tipo === 'Dinheiro') {
                 document.getElementById('area-troco').style.display = 'block';
                 document.getElementById('troco-obrigatorio-msg').style.display = 'block';
-            } else if (tipo === 'Pix') {
-                document.getElementById('area-pix').style.display = 'block';
             }
-            // Cartão não mostra nada extra
-        }
-
-        // Função para copiar a chave Pix
-        function copiarChavePix() {
-            const chave = document.getElementById('chave-pix').innerText.trim();
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(chave).then(() => {
-                    alert('✅ Chave Pix copiada!');
-                }).catch(() => {
-                    copiarChavePixFallback(chave);
-                });
-            } else {
-                copiarChavePixFallback(chave);
-            }
-        }
-        function copiarChavePixFallback(chave) {
-            const textarea = document.createElement('textarea');
-            textarea.value = chave;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = 0;
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                alert('✅ Chave Pix copiada!');
-            } catch (e) {
-                alert('❌ Não foi possível copiar. Chave: ' + chave);
-            }
-            document.body.removeChild(textarea);
+            // Pix e Cartão não mostram nada extra
         }
 
         function atualizarContadorCarrinho(){ document.getElementById('cart-count').innerText=carrinho.length; if(carrinho.length) document.getElementById('btn-carrinho').classList.add('cart-active'); else document.getElementById('btn-carrinho').classList.remove('cart-active'); }
@@ -1339,7 +1291,7 @@
 
             document.getElementById('search-clear').addEventListener('click', limparPesquisa);
 
-            // Inicializa a exibição do Pix (já que o radio Pix vem marcado como checked)
+            // Inicializa: como o radio Pix está marcado, mas removemos a exibição, apenas garantir que nada apareça
             gerenciarPagamento('Pix');
         });
     </script>
